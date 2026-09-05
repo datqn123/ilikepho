@@ -12,6 +12,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HexFormat;
 import java.util.Optional;
 
@@ -24,6 +26,12 @@ public class AdminSessionService {
 
     private final AdminRepository adminRepository;
     private final AdminSessionRepository adminSessionRepository;
+
+    /**
+     * Múi giờ cố định cho mọi thao tác thời gian của phiên (ghi timestamp và tính khoảng cách),
+     * không phụ thuộc múi giờ mặc định của máy chạy ứng dụng.
+     */
+    private static final ZoneId SESSION_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     public AdminSessionService(AdminRepository adminRepository,
                                AdminSessionRepository adminSessionRepository) {
@@ -67,7 +75,7 @@ public class AdminSessionService {
         session.setAdminId(adminId);
         session.setSessionHash(hashSessionId(rawSessionId));
         session.setStatus(SessionStatus.ACTIVE);
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(SESSION_ZONE);
         session.setCreatedAt(now);
         session.setLastActivityAt(now);
         return adminSessionRepository.save(session);
@@ -90,7 +98,7 @@ public class AdminSessionService {
      */
     @Transactional
     public void updateLastActivity(AdminSession session) {
-        session.setLastActivityAt(LocalDateTime.now());
+        session.setLastActivityAt(LocalDateTime.now(SESSION_ZONE));
         adminSessionRepository.save(session);
     }
 
@@ -107,13 +115,14 @@ public class AdminSessionService {
 
     /**
      * Kiểm tra phiên đã hết hạn do không hoạt động quá số phút cho phép.
+     * Khoảng thời gian được tính giữa hai kiểu nhận biết múi giờ theo {@link #SESSION_ZONE}.
      *
      * @param session        phiên cần kiểm tra
      * @param timeoutMinutes số phút không hoạt động tối đa
      * @return {@code true} nếu phiên đã hết hạn, ngược lại {@code false}
      */
     public boolean isExpired(AdminSession session, long timeoutMinutes) {
-        return Duration.between(session.getLastActivityAt(), LocalDateTime.now())
+        return Duration.between(session.getLastActivityAt().atZone(SESSION_ZONE), ZonedDateTime.now(SESSION_ZONE))
                 .toMinutes() > timeoutMinutes;
     }
 }
