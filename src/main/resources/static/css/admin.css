@@ -1,0 +1,273 @@
+/* ============================================================
+   ilikepho — Admin Shell
+   Layout: sidebar (trái) + topbar + content (phải).
+   Token lấy từ theme.css. Dùng cho admin/layout.html và các trang
+   quản trị sau này (kế thừa qua fragment content).
+   ============================================================ */
+
+/* ====== Bố cục tổng ====== */
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+/* ====== Sidebar ====== */
+.sidebar {
+  flex: none;
+  width: 264px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--wood-900) 0%, #2c1a10 100%);
+  color: #f1e6d8;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 18px;
+}
+
+.sidebar-brand .brand-badge {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--pho-600), var(--pho-400));
+}
+
+.sidebar-brand .brand-badge svg { width: 26px; height: 26px; }
+
+.sidebar-brand h1 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.sidebar-brand p { font-size: var(--text-xs); opacity: 0.75; }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 8px 12px 20px;
+  overflow-y: auto;
+}
+
+.nav-group-label {
+  padding: 14px 10px 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(241, 230, 216, 0.5);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  border-radius: var(--radius);
+  color: #e9dccb;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.nav-item svg { width: 20px; height: 20px; opacity: 0.85; }
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-item.is-active {
+  background: linear-gradient(90deg, var(--pho-600), var(--pho-500));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.nav-item.is-active svg { opacity: 1; }
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--text-xs);
+  color: rgba(241, 230, 216, 0.6);
+}
+
+/* ====== Khung phải ====== */
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ====== Topbar ====== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-height: 64px;
+  padding: 0 var(--sp-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+
+.topbar-search {
+  flex: 1;
+  max-width: 360px;
+  position: relative;
+}
+
+.topbar-search .input-icon { left: 12px; }
+.topbar-search input { min-height: 40px; padding-left: 40px; font-size: var(--text-sm); }
+
+.topbar-spacer { flex: 1; }
+
+.user-menu {
+  position: relative;
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.user-btn:hover { background: var(--bg-soft); }
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pho-600), var(--pho-400));
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.user-btn .user-name { font-size: var(--text-sm); font-weight: 600; color: var(--ink-900); }
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: var(--z-dropdown);
+  min-width: 200px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  display: none;
+}
+
+.user-dropdown.is-open { display: block; }
+
+.user-dropdown a {
+  display: block;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--ink-700);
+}
+
+.user-dropdown a:hover { background: var(--bg-soft); text-decoration: none; }
+
+/* ====== Content ====== */
+.admin-content {
+  flex: 1;
+  padding: var(--sp-6);
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.page-head h2 { font-size: var(--text-2xl); }
+
+.page-head p { color: var(--ink-500); font-size: var(--text-sm); margin-top: 2px; }
+
+/* ====== Drawer backdrop + responsive ====== */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: rgba(36, 26, 18, 0.5);
+  display: none;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+  cursor: pointer;
+}
+
+.menu-toggle svg { width: 22px; height: 22px; color: var(--ink-700); }
+.menu-toggle:hover { background: var(--border); }
+
+@media (min-width: 900px) {
+  .menu-toggle { display: none; }
+}
+
+@media (max-width: 899.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-drawer);
+    transform: translateX(-100%);
+    transition: transform var(--dur) var(--ease);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.is-open { transform: translateX(0); }
+
+  .drawer-overlay.is-open { display: block; }
+
+  .user-name { display: none; }
+  .topbar-search { display: none; }
+}
+
+@media (min-width: 900px) {
+  .drawer-overlay { display: none !important; }
+}

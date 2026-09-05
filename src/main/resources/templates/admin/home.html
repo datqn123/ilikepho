@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout :: layout('Tổng quan', ~{::main})}">
+<body>
+<main class="admin-content">
+    <div class="page-head">
+        <div>
+            <h2>Tổng quan</h2>
+            <p>Chào mừng trở lại 👋</p>
+        </div>
+    </div>
+
+    <div class="card" style="padding: 32px; text-align:center;">
+        <span class="eyebrow">Admin</span>
+        <h2 style="margin-top:8px;">Đăng nhập thành công</h2>
+        <p class="muted" style="max-width:480px;margin:12px auto 0;">
+            Đây là trang tổng quan tối giản của hệ quản trị.
+            Các chức năng (Thực đơn, Danh mục, Đơn hàng...) sẽ được bổ sung ở các task sau.
+        </p>
+    </div>
+</main>
+</body>
+</html>

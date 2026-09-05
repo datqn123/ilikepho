@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<!--
+  Fragment topbar: thanh trên khu vực admin.
+  Chèn: <header th:replace="~{fragment/admin-topbar :: topbar('Tiêu đề trang')}">...
+  Tham số title = tiêu đề hiển thị bên trái.
+-->
+<header th:fragment="topbar(title)" class="topbar">
+  <button type="button" class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+  </button>
+
+  <h2 class="topbar-title" th:text="${title} ?: 'Tổng quan'">Tổng quan</h2>
+
+  <div class="topbar-search">
+    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="search" placeholder="Tìm kiếm..." aria-label="Tìm kiếm">
+  </div>
+
+  <div class="topbar-spacer"></div>
+
+  <div class="user-menu">
+    <button type="button" class="user-btn" id="userMenuBtn" aria-haspopup="true" aria-expanded="false">
+      <span class="avatar" aria-hidden="true">Đ</span>
+      <span class="user-name">Cô Dự</span>
+    </button>
+    <div class="user-dropdown" id="userDropdown" role="menu">
+      <a href="#" role="menuitem">Hồ sơ</a>
+      <a href="#" role="menuitem">Cài đặt</a>
+      <form th:action="@{/admin/logout}" method="post">
+        <button type="submit" role="menuitem"
+                style="display:block;width:100%;padding:9px 12px;border:none;border-radius:var(--radius-sm);background:none;font-size:var(--text-sm);font-family:inherit;color:var(--ink-700);text-align:left;cursor:pointer;">
+          Đăng xuất
+        </button>
+      </form>
+    </div>
+  </div>
+</header>

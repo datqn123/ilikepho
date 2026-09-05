@@ -1,0 +1,513 @@
+/* ============================================================
+   ilikepho — Theme "Quán Phở cổ điển hiện đại"
+   Design tokens + reset + base + shared components.
+   Mọi trang dùng chung file này. Không hardcode màu trong CSS
+   của từng trang — lấy từ :root bên dưới.
+   ============================================================ */
+
+:root {
+  /* ---------- Màu nước dùng & kem ---------- */
+  --bg: #fbf3e8;
+  --bg-soft: #f5e8d6;
+  --surface: #fffdf9;
+  --surface-elevated: #ffffff;
+
+  /* ---------- Cam phở / chili (chủ đạo) ---------- */
+  --pho-700: #9a3412;
+  --pho-600: #c2410c;
+  --pho-500: #ea580c;
+  --pho-400: #f97316;
+  --pho-300: #fb923c;
+  --pho-100: #ffedd5;
+
+  /* ---------- Vàng hoa hồi (điểm nhấn) ---------- */
+  --gold-500: #d97706;
+  --gold-400: #f59e0b;
+  --gold-300: #f6c164;
+  --gold-100: #fdf3d7;
+
+  /* ---------- Gỗ ấm ---------- */
+  --wood-900: #3e2415;
+  --wood-700: #6b3f26;
+  --wood-500: #9a6a3f;
+  --wood-200: #e3cdb3;
+
+  /* ---------- Mực / text ---------- */
+  --ink-900: #241a12;
+  --ink-700: #4a3b2e;
+  --ink-500: #7a6857;
+  --ink-300: #b7a795;
+
+  /* ---------- Trạng thái ---------- */
+  --success: #1f7a3d;
+  --success-bg: #e8f6ec;
+  --error: #b42318;
+  --error-bg: #fdecea;
+  --warning: #b45309;
+  --warning-bg: #fdf3d7;
+
+  /* ---------- Viền & nền neutral ---------- */
+  --border: #ecdcc6;
+  --border-strong: #dcc4a6;
+
+  /* ---------- Typography ---------- */
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 2.75rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.6;
+
+  /* ---------- Khoảng cách ---------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ---------- Bo tròn ---------- */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ---------- Bóng ---------- */
+  --shadow-xs: 0 1px 2px rgba(62, 36, 21, 0.06);
+  --shadow-sm: 0 2px 8px rgba(62, 36, 21, 0.08);
+  --shadow: 0 10px 24px rgba(62, 36, 21, 0.1);
+  --shadow-lg: 0 20px 44px rgba(62, 36, 21, 0.16);
+  --glow-pho: 0 0 0 4px rgba(234, 88, 12, 0.14);
+
+  /* ---------- Z-index ---------- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-drawer: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+
+  /* ---------- Chuyển động ---------- */
+  --dur-fast: 0.12s;
+  --dur: 0.2s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--ink-700);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--pho-600);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--ink-900);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+
+::selection {
+  background: var(--pho-100);
+  color: var(--ink-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pho-500);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Tiện ích layout
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--sp-4);
+}
+
+@media (min-width: 768px) {
+  .container { padding-inline: var(--sp-6); }
+}
+
+.section {
+  padding-block: var(--sp-12);
+}
+
+/* ============================================================
+   Typography helper
+   ============================================================ */
+.eyebrow {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pho-600);
+}
+
+.display {
+  font-family: var(--font-display);
+  color: var(--ink-900);
+}
+
+.muted { color: var(--ink-500); }
+.center { text-align: center; }
+
+/* ============================================================
+   Nút
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 46px;
+  padding: 0 var(--sp-5);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    filter var(--dur) var(--ease);
+}
+
+.btn:hover { text-decoration: none; }
+
+.btn:active { transform: translateY(0); }
+
+.btn[disabled],
+.btn.is-loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-block { width: 100%; }
+
+.btn-lg { min-height: 52px; padding-inline: var(--sp-6); }
+.btn-sm { min-height: 36px; padding-inline: var(--sp-4); font-size: var(--text-sm); }
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--pho-600) 0%, var(--pho-500) 60%, var(--pho-400) 100%);
+  box-shadow: 0 10px 20px rgba(194, 65, 12, 0.25);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(194, 65, 12, 0.32);
+}
+
+.btn-soft {
+  color: var(--pho-700);
+  background: var(--pho-100);
+}
+
+.btn-soft:hover {
+  background: #ffe1c2;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  color: var(--ink-700);
+  background: transparent;
+  border-color: var(--border-strong);
+}
+
+.btn-ghost:hover {
+  border-color: var(--pho-400);
+  color: var(--pho-700);
+}
+
+/* Spinner cho nút loading */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.btn-soft .spinner { border-color: rgba(194, 65, 12, 0.3); border-top-color: var(--pho-600); }
+.btn-ghost .spinner { border-color: rgba(74, 59, 46, 0.3); border-top-color: var(--ink-700); }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Form
+   ============================================================ */
+.field { margin-bottom: var(--sp-5); }
+
+.field label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-700);
+  margin-bottom: var(--sp-2);
+}
+
+.input-wrap { position: relative; }
+
+.input-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--ink-500);
+  pointer-events: none;
+}
+
+.input-wrap input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  font-size: var(--text-base);
+  color: var(--ink-900);
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.input-wrap .input-icon + input { padding-left: 44px; }
+.input-wrap .trailing + input { padding-right: 44px; }
+
+.input-wrap input::placeholder { color: var(--ink-300); }
+.input-wrap input:hover { border-color: var(--wood-500); }
+
+.input-wrap input:focus {
+  border-color: var(--pho-500);
+  box-shadow: var(--glow-pho);
+}
+
+.input-wrap input.is-invalid {
+  border-color: var(--error);
+}
+
+.input-wrap input.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12);
+}
+
+/* Nút toggle hiện/ẩn mật khẩu (đặt phải trong ô) */
+.trailing {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-500);
+  cursor: pointer;
+}
+
+.trailing:hover { color: var(--pho-600); }
+.trailing svg { width: 20px; height: 20px; }
+
+.field-error {
+  color: var(--error);
+  font-size: var(--text-xs);
+  margin-top: var(--sp-2);
+}
+
+/* Checkbox */
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pho-600);
+  cursor: pointer;
+}
+
+/* ============================================================
+   Card
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   Alert
+   ============================================================ */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.alert svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.alert-error { background: var(--error-bg); border: 1px solid #f3c1bb; color: var(--error); }
+.alert-success { background: var(--success-bg); border: 1px solid #c3e6cd; color: var(--success); }
+.alert-warning { background: var(--warning-bg); border: 1px solid #efd9a6; color: var(--warning); }
+
+/* ============================================================
+   Badge
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  background: var(--pho-100);
+  color: var(--pho-700);
+}
+
+.badge-gold { background: var(--gold-100); color: var(--gold-500); }
+.badge-neutral { background: #efe7db; color: var(--ink-700); }
+
+/* ============================================================
+   Bảng dữ liệu (dùng cho admin)
+   ============================================================ */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table thead th {
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+  background: var(--bg-soft);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table tbody td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-700);
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+
+.table tbody tr:hover td { background: #fdf7ee; }
+
+/* ============================================================
+   Trạng thái giảm chuyển động
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

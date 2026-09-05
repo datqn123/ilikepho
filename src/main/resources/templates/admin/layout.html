@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+    <th:block th:replace="~{fragment/head :: head-common}"></th:block>
+    <title>Tổng quan | Quản trị — Tiệm Phở cô Dự</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-shell">
+
+    <!-- Overlay khi mở drawer trên mobile -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside th:replace="~{fragment/admin-sidebar :: sidebar}"></aside>
+
+    <!-- Khung phải -->
+    <div class="admin-main">
+
+        <!-- Topbar -->
+        <header th:replace="~{fragment/admin-topbar :: topbar(${title})}"></header>
+
+        <!-- Nội dung trang con chèn vào đây -->
+        <th:block th:replace="${content}"></th:block>
+    </div>
+</div>
+
+<script>
+    (function () {
+        "use strict";
+        var sidebar = document.getElementById("adminSidebar");
+        var overlay = document.getElementById("drawerOverlay");
+        var toggle = document.getElementById("menuToggle");
+
+        function open() {
+            if (sidebar) sidebar.classList.add("is-open");
+            if (overlay) overlay.classList.add("is-open");
+        }
+
+        function close() {
+            if (sidebar) sidebar.classList.remove("is-open");
+            if (overlay) overlay.classList.remove("is-open");
+        }
+
+        if (toggle) toggle.addEventListener("click", open);
+        if (overlay) overlay.addEventListener("click", close);
+
+        // User dropdown
+        var userBtn = document.getElementById("userMenuBtn");
+        var dropdown = document.getElementById("userDropdown");
+        if (userBtn && dropdown) {
+            userBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                var open = dropdown.classList.toggle("is-open");
+                userBtn.setAttribute("aria-expanded", open ? "true" : "false");
+            });
+            document.addEventListener("click", function (e) {
+                if (!userBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove("is-open");
+                    userBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<!--
+  Fragment head-common: phần <head> dùng chung (charset, viewport, fonts, theme.css).
+  Trang con đặt trong <head> của mình:
+      <th:block th:replace="~{fragment/head :: head-common}"></th:block>
+      <title>...</title>
+      <link rel="stylesheet" th:href="@{/css/...}">
+-->
+<th:block th:fragment="head-common">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tiệm Phở cô Dự — Phở ngon, chuẩn vị Hà Nội.">
+  <meta name="theme-color" content="#c2410c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;family=Playfair+Display:wght@600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/theme.css}">
+</th:block>
+</html>

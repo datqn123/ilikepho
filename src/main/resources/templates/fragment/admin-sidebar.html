@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<!--
+  Fragment sidebar: thanh điều hướng khu vực admin.
+  Trang admin chèn: <aside th:replace="~{fragment/admin-sidebar :: sidebar}">...</aside>
+  Phần tử <nav> dùng data-current để đánh dấu item active (đối chiếu với
+  th:classappend hoặc JS). Mặc định đánh dấu item có data-match.
+-->
+<aside th:fragment="sidebar" class="sidebar" id="adminSidebar" aria-label="Menu quản trị">
+  <div class="sidebar-brand">
+    <span class="brand-badge" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <path d="M28 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+        <path d="M11 25a13 13 0 0 0 26 0z" fill="#fff" opacity=".95"/>
+        <path d="M11 25a13 4 0 0 1 26 0" fill="#ffd97a"/>
+        <path d="M17 24q3 4 6 0t6 0t6 0" stroke="#e2722b" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <div>
+      <h1>Tiệm Phở cô Dự</h1>
+      <p>Quản trị hệ thống</p>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <p class="nav-group-label">Điều hành</p>
+    <a href="#" class="nav-item is-active" data-current="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      <span>Tổng quan</span>
+    </a>
+    <a href="#" class="nav-item" data-current="orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l2 4-7 12-7-12z"/><path d="M3 7h18"/><path d="M12 7v12"/></svg>
+      <span>Đơn hàng</span>
+    </a>
+    <a href="#" class="nav-item" data-current="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v3H4z"/><path d="M4 11h16v9H4z"/><path d="M8 15h3"/></svg>
+      <span>Thực đơn</span>
+    </a>
+    <a href="#" class="nav-item" data-current="categories">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v6l9 4 9-4V7"/><path d="M3 13v6l9 4 9-4v-6"/></svg>
+      <span>Danh mục</span>
+    </a>
+
+    <p class="nav-group-label">Khách hàng</p>
+    <a href="#" class="nav-item" data-current="customers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.2-6 7-6s7 2 7 6"/><path d="M18 8a3 3 0 0 1 0 6"/><path d="M22 21c0-2.5-1.6-4.3-4-5"/></svg>
+      <span>Khách hàng</span>
+    </a>
+    <a href="#" class="nav-item" data-current="reports">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-8"/><path d="M22 20H2"/></svg>
+      <span>Báo cáo</span>
+    </a>
+
+    <p class="nav-group-label">Hệ thống</p>
+    <a href="#" class="nav-item" data-current="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Cài đặt</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <p>Phiên bản 0.1 · @ ilikepho</p>
+  </div>
+</aside>

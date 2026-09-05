@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<!-- Fragment footer: chân trang công khai. -->
+<footer th:fragment="site-footer" class="site-footer">
+  <div class="container">
+    <div class="footer-col">
+      <h3>Tiệm Phở cô Dự</h3>
+      <p>
+        Hơn 30 năm gìn giữ hương vị phở truyền thống chuẩn vị Hà Nội.
+        Nguyên liệu tươi, nước dùng hầm kỹ xương, bánh phở mềm thơm.
+      </p>
+    </div>
+    <div class="footer-col">
+      <h3>Liên hệ</h3>
+      <ul>
+        <li>12A phố Phở, Hà Nội</li>
+        <li>024.3.999.888</li>
+        <li>6:00 – 22:00 hằng ngày</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Điều hướng</h3>
+      <ul>
+        <li><a href="#about">Giới thiệu</a></li>
+        <li><a href="#menu">Thực đơn</a></li>
+        <li><a th:href="@{/admin/login}">Đăng nhập quản trị</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>&copy; 2026 Tiệm Phở cô Dự. Mọi quyền được bảo lưu.</p>
+  </div>
+</footer>

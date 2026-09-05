@@ -1,0 +1,258 @@
+/* ============================================================
+   ilikepho — Trang công khai (homepage)
+   Token lấy từ theme.css.
+   ============================================================ */
+
+/* ====== Header ====== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: rgba(255, 253, 249, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-height: 68px;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.site-logo:hover { text-decoration: none; }
+
+.site-logo .logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--pho-700), var(--pho-400));
+}
+
+.site-logo .logo-badge svg { width: 26px; height: 26px; }
+
+.site-logo .logo-text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--ink-900);
+  line-height: 1.1;
+}
+
+.site-logo .logo-text span { font-size: var(--text-xs); color: var(--ink-500); }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-left: auto;
+}
+
+.site-nav a {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink-700);
+  text-decoration: none;
+}
+
+.site-nav a:hover { background: var(--bg-soft); color: var(--pho-700); }
+
+.site-nav .nav-cta { margin-left: var(--sp-2); }
+
+/* ====== Hero ====== */
+.hero-site {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 420px at 110% -10%, rgba(246, 193, 100, 0.28), transparent 60%),
+    linear-gradient(135deg, var(--wood-900) 0%, var(--pho-700) 55%, var(--pho-500) 100%);
+  color: #fff;
+}
+
+.hero-site .container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--sp-8);
+  padding-block: var(--sp-16);
+}
+
+.hero-copy h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: var(--sp-4);
+}
+
+.hero-copy h1 em {
+  font-style: italic;
+  color: var(--gold-300);
+}
+
+.hero-copy > p {
+  max-width: 480px;
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  opacity: 0.94;
+  margin-bottom: var(--sp-6);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.hero-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-bowl-big {
+  width: min(340px, 90%);
+  filter: drop-shadow(0 26px 40px rgba(18, 8, 3, 0.4));
+}
+
+/* ====== Section chung ====== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--ink-900);
+  margin: var(--sp-2) 0 var(--sp-4);
+}
+
+.section-lead {
+  max-width: 560px;
+  color: var(--ink-500);
+  margin-bottom: var(--sp-8);
+}
+
+.section-title.centered,
+.section-lead.centered { margin-inline: auto; }
+
+/* ====== Giới thiệu ====== */
+.about-grid {
+  display: grid;
+  gap: var(--sp-6);
+}
+
+.about-card {
+  padding: var(--sp-6);
+  border-left: 4px solid var(--pho-400);
+}
+
+.about-card h3 { margin-bottom: var(--sp-2); }
+.about-card p { color: var(--ink-500); font-size: var(--text-sm); }
+
+/* ====== Thực đơn nổi bật ====== */
+.menu-grid {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: 1fr;
+}
+
+.menu-card {
+  overflow: hidden;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.menu-card-body { padding: var(--sp-5); }
+
+.menu-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.menu-card-head h3 { font-family: var(--font-display); font-size: var(--text-lg); }
+
+.menu-price { font-weight: 800; color: var(--pho-600); }
+
+.menu-card-body p { color: var(--ink-500); font-size: var(--text-sm); }
+
+/* ====== CTA đặt bàn ====== */
+.cta-band {
+  background:
+    radial-gradient(700px 300px at 0% 0%, rgba(255, 255, 255, 0.1), transparent 55%),
+    linear-gradient(135deg, var(--pho-700), var(--pho-500));
+  color: #fff;
+  border-radius: var(--radius-xl);
+  padding: var(--sp-10) var(--sp-6);
+  text-align: center;
+}
+
+.cta-band h2 { font-family: var(--font-display); font-size: var(--text-2xl); color: #fff; margin-bottom: var(--sp-3); }
+.cta-band p { max-width: 520px; margin: 0 auto var(--sp-6); opacity: 0.94; }
+
+/* ====== Footer ====== */
+.site-footer {
+  background: var(--wood-900);
+  color: #e9dccb;
+  margin-top: var(--sp-12);
+}
+
+.site-footer .container {
+  display: grid;
+  gap: var(--sp-6);
+  padding-block: var(--sp-10) var(--sp-6);
+}
+
+.site-footer h3 {
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: var(--text-base);
+  margin-bottom: var(--sp-3);
+}
+
+.site-footer a { color: #e9dccb; }
+.site-footer a:hover { color: var(--gold-300); }
+
+.site-footer .footer-col p,
+.site-footer .footer-col li {
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  color: rgba(233, 220, 203, 0.82);
+}
+
+.site-footer ul { list-style: none; padding: 0; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: var(--sp-4);
+  font-size: var(--text-xs);
+  color: rgba(233, 220, 203, 0.6);
+}
+
+/* ====== Responsive ====== */
+@media (min-width: 640px) {
+  .about-grid { grid-template-columns: repeat(3, 1fr); }
+  .menu-grid { grid-template-columns: repeat(2, 1fr); }
+  .site-footer .container { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+@media (min-width: 900px) {
+  .hero-site .container { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+  .hero-site .container { padding-block: var(--sp-16); }
+  .menu-grid { grid-template-columns: repeat(3, 1fr); }
+}

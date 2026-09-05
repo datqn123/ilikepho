@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/head :: head-common}"></th:block>
+    <title>Tiệm Phở cô Dự — Phở ngon, chuẩn vị Hà Nội</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+
+<!-- ====== Header ====== -->
+<header class="site-header">
+    <div class="container">
+        <a th:href="@{/home}" class="site-logo">
+            <span class="logo-badge" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M28 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+                    <path d="M11 25a13 13 0 0 0 26 0z" fill="#fff" opacity=".95"/>
+                    <path d="M11 25a13 4 0 0 1 26 0" fill="#ffd97a"/>
+                    <path d="M17 24q3 4 6 0t6 0t6 0" stroke="#e2722b" stroke-width="2.4" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="logo-text">
+                <strong>Tiệm Phở cô Dự</strong>
+                <span>Hà Nội · 30 năm hương vị</span>
+            </span>
+        </a>
+        <nav class="site-nav" aria-label="Điều hướng chính">
+            <a href="#about">Giới thiệu</a>
+            <a href="#menu">Thực đơn</a>
+            <a href="#contact">Liên hệ</a>
+            <a class="btn btn-primary btn-sm nav-cta" th:href="@{/admin/login}">Đăng nhập quản trị</a>
+        </nav>
+    </div>
+</header>
+
+<!-- ====== Hero ====== -->
+<section class="hero-site">
+    <div class="container">
+        <div class="hero-copy">
+            <span class="eyebrow">Chuẩn vị Hà Nội</span>
+            <h1>Phở ngon, <em>chuẩn vị</em> <br>truyền thống</h1>
+            <p>
+                Nước dùng hầm kỹ xương trong 12 tiếng, bánh phở mềm thơm,
+                thịt bò tươi ngon mỗi ngày. Hơn 30 năm gìn giữ hương vị
+                giữa lòng thành phố.
+            </p>
+            <div class="hero-actions">
+                <a href="#menu" class="btn btn-soft btn-lg">Xem thực đơn</a>
+                <a href="#contact" class="btn btn-ghost btn-lg" style="color:#fff;border-color:rgba(255,255,255,.5);">Đặt bàn</a>
+            </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <svg class="hero-bowl-big" viewBox="0 0 240 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 58q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+                <path d="M130 52q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+                <path d="M160 58q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+                <line x1="28" y1="150" x2="88" y2="28" stroke="#7a4a21" stroke-width="7" stroke-linecap="round"/>
+                <line x1="50" y1="150" x2="110" y2="28" stroke="#8a5528" stroke-width="7" stroke-linecap="round"/>
+                <path d="M45 100a75 46 0 0 0 150 0z" fill="#fff3e0" stroke="#f0d7b8" stroke-width="3"/>
+                <ellipse cx="120" cy="100" rx="75" ry="27" fill="#fffaf2" stroke="#f0d7b8" stroke-width="3"/>
+                <ellipse cx="120" cy="103" rx="62" ry="19" fill="#e5a544"/>
+                <path d="M76 96q10 10 20 0t20 0t20 0t20 0" stroke="#f7d794" stroke-width="6" stroke-linecap="round"/>
+                <path d="M82 105q10 10 20 0t20 0t20 0t20 0" stroke="#f7d794" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+                <ellipse cx="98" cy="97" rx="15" ry="8" fill="#e76f51"/>
+                <ellipse cx="142" cy="100" rx="12" ry="7" fill="#e76f51" opacity=".85"/>
+                <path d="M116 86q4-12 10-16" stroke="#7fb069" stroke-width="5" stroke-linecap="round"/>
+                <path d="M126 88q4-12 10-16" stroke="#7fb069" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- ====== Giới thiệu ====== -->
+<section class="section" id="about">
+    <div class="container">
+        <div class="center">
+            <span class="eyebrow">Giới thiệu</span>
+            <h2 class="section-title centered">Hương vị giữ nguyên, đậm chất Hà Nội</h2>
+            <p class="section-lead centered">
+                Mỗi bát phở là một câu chuyện: từ lựa chọn xương, gia vị đến
+                bàn tay tỉ mỉ của người nấu suốt bao năm.
+            </p>
+        </div>
+        <div class="about-grid">
+            <div class="card about-card">
+                <h3>Nước dùng</h3>
+                <p>Hầm kỹ xương, gừng nướng, thảo quả, hoa hồi — ninh đủ 12 tiếng, trong và ngọt tự nhiên.</p>
+            </div>
+            <div class="card about-card">
+                <h3>Bánh phở</h3>
+                <p>Sợi phở mềm mại, làm mới mỗi ngày, quyện vừa vặn với nước dùng đậm đà.</p>
+            </div>
+            <div class="card about-card">
+                <h3>Nguyên liệu</h3>
+                <p>Thịt bò tươi, rau thơm, chanh, ớt — chọn lọc từng ngày để giữ trọn hương vị.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====== Thực đơn nổi bật ====== -->
+<section class="section" id="menu" style="background:var(--bg-soft);">
+    <div class="container">
+        <span class="eyebrow">Thực đơn</span>
+        <h2 class="section-title">Món nổi bật</h2>
+        <p class="section-lead">Những lựa chọn được khách hàng yêu thích nhất tại quán.</p>
+
+        <div class="menu-grid">
+            <div class="card menu-card">
+                <div class="menu-card-body">
+                    <div class="menu-card-head">
+                        <h3>Phở bò tái</h3>
+                        <span class="menu-price">65k</span>
+                    </div>
+                    <p>Thịt bò tái mềm, nước dùng đậm, hành tây thơm.</p>
+                </div>
+            </div>
+            <div class="card menu-card">
+                <div class="menu-card-body">
+                    <div class="menu-card-head">
+                        <h3>Phở gân bò</h3>
+                        <span class="menu-price">70k</span>
+                    </div>
+                    <p>Gân bò giòn dai, kèm bánh phở mềm, chan ngập nước.</p>
+                </div>
+            </div>
+            <div class="card menu-card">
+                <div class="menu-card-body">
+                    <div class="menu-card-head">
+                        <h3>Phở bò viên</h3>
+                        <span class="menu-price">65k</span>
+                    </div>
+                    <p>Viên bò dai giòn, nước dùng ngọt thanh, thơm mùi hoa hồi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====== CTA đặt bàn ====== -->
+<section class="section" id="contact">
+    <div class="container">
+        <div class="cta-band">
+            <h2>Đến và cảm nhận hương vị phở Hà Nội</h2>
+            <p>Mở cửa 6:00 – 22:00 hằng ngày. Ghé quán hoặc gọi đặt bàn trước để có chỗ đẹp.</p>
+            <a href="#contact" class="btn btn-soft btn-lg">Đặt bàn ngay</a>
+        </div>
+    </div>
+</section>
+
+<!-- ====== Footer ====== -->
+<footer th:replace="~{fragment/footer :: site-footer}"></footer>
+
+</body>
+</html>
