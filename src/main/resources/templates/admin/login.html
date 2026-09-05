@@ -8,48 +8,52 @@
 <body>
 <main class="login-page">
 
-    <!-- ====== Khối trang trí (hero) ====== -->
-    <section class="hero" aria-hidden="true">
-        <div class="hero-mobile">
-            <h2>Tiệm Phở cô Dự</h2>
-            <p>Đăng nhập quản trị</p>
-        </div>
+    <!-- ===== Mảng tối: tĩnh vật nước dùng ===== -->
+    <section class="scene">
+        <span class="scene-seal" aria-hidden="true">Tiệm Phở cô Dự</span>
 
-        <div class="hero-content">
-            <div class="hero-bowl-wrap">
-                <span class="steam s1"></span>
-                <span class="steam s2"></span>
-                <span class="steam s3"></span>
-                <svg class="hero-bowl" viewBox="0 0 240 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M100 58q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
-                    <path d="M130 52q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".55"/>
-                    <path d="M160 58q10-14 0-28" stroke="#fff7ea" stroke-width="7" stroke-linecap="round" opacity=".85"/>
-                    <line x1="28" y1="150" x2="88" y2="28" stroke="#7a4a21" stroke-width="7" stroke-linecap="round"/>
-                    <line x1="50" y1="150" x2="110" y2="28" stroke="#8a5528" stroke-width="7" stroke-linecap="round"/>
-                    <path d="M45 100a75 46 0 0 0 150 0z" fill="#fff3e0" stroke="#f0d7b8" stroke-width="3"/>
-                    <ellipse cx="120" cy="100" rx="75" ry="27" fill="#fffaf2" stroke="#f0d7b8" stroke-width="3"/>
-                    <ellipse cx="120" cy="103" rx="62" ry="19" fill="#e5a544"/>
-                    <path d="M76 96q10 10 20 0t20 0t20 0t20 0" stroke="#f7d794" stroke-width="6" stroke-linecap="round"/>
-                    <path d="M82 105q10 10 20 0t20 0t20 0t20 0" stroke="#f7d794" stroke-width="6" stroke-linecap="round" opacity=".75"/>
-                    <ellipse cx="98" cy="97" rx="15" ry="8" fill="#e76f51"/>
-                    <ellipse cx="142" cy="100" rx="12" ry="7" fill="#e76f51" opacity=".85"/>
-                    <path d="M116 86q4-12 10-16" stroke="#7fb069" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M126 88q4-12 10-16" stroke="#7fb069" stroke-width="5" stroke-linecap="round"/>
+        <div class="scene-lockup">
+            <span class="brand-badge" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M28 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+                    <path d="M11 25a13 13 0 0 0 26 0z" fill="#fff" opacity=".95"/>
+                    <path d="M11 25a13 4 0 0 1 26 0" fill="#ffd97a"/>
+                    <path d="M17 24q3 4 6 0t6 0t6 0" stroke="#e2722b" stroke-width="2.4" stroke-linecap="round"/>
                 </svg>
+            </span>
+            <div class="lockup-text">
+                <h1 class="scene-title">Tiệm Phở cô Dự</h1>
+                <p class="scene-sub">Đăng nhập quản trị</p>
             </div>
-            <h2>Phở ngon, chuẩn vị Hà Nội</h2>
-            <p>Hơn 30 năm gìn giữ hương vị truyền thống giữa lòng thành phố</p>
         </div>
 
-        <div class="hero-footer">Quản trị viên — Tiệm Phở cô Dự</div>
+        <div class="scene-still" aria-hidden="true">
+            <span class="steam s1"></span>
+            <span class="steam s2"></span>
+            <span class="steam s3"></span>
+            <svg class="bowl" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M45 100a75 46 0 0 0 150 0z" fill="#fff3e0" stroke="#dfc19b" stroke-width="3"/>
+                <ellipse cx="120" cy="100" rx="75" ry="27" fill="#fffaf2" stroke="#dfc19b" stroke-width="3"/>
+                <ellipse cx="120" cy="103" rx="62" ry="19" fill="#dca03c"/>
+                <path d="M76 98q10 10 20 0t20 0t20 0t20 0" stroke="#f5d387" stroke-width="6" stroke-linecap="round"/>
+                <path d="M82 107q10 10 20 0t20 0t20 0t20 0" stroke="#f5d387" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+                <ellipse cx="98" cy="99" rx="15" ry="8" fill="#e76f51"/>
+                <ellipse cx="142" cy="102" rx="12" ry="7" fill="#e76f51" opacity=".85"/>
+                <path d="M116 88q4-12 10-16" stroke="#8fbd72" stroke-width="5" stroke-linecap="round"/>
+                <path d="M126 90q4-12 10-16" stroke="#8fbd72" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+        </div>
+
+        <p class="scene-caption" aria-hidden="true">Hà Nội · 30 năm hương vị</p>
     </section>
 
-    <!-- ====== Form đăng nhập ====== -->
-    <section class="login-main">
+    <!-- ===== Mảng sáng: form đăng nhập ===== -->
+    <section class="login-side">
         <div class="login-card">
-            <div class="brand">
-                <span class="brand-badge">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <header class="brand">
+                <span class="brand-badge" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M21 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
                         <path d="M28 10c0-4 3-6 3-6" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/>
                         <path d="M11 25a13 13 0 0 0 26 0z" fill="#fff" opacity=".95"/>
@@ -61,7 +65,8 @@
                     <h1>Tiệm Phở cô Dự</h1>
                     <p>Đăng nhập quản trị</p>
                 </div>
-            </div>
+            </header>
+            <span class="brand-rule" aria-hidden="true"></span>
 
             <!-- Hiển thị khi đăng nhập sai: /admin/login?error (chuẩn Spring Security) -->
             <div class="alert alert-error" th:if="${param.error}">
