@@ -111,7 +111,8 @@ public class AdminRememberMeService {
      * idempotent, an toàn khi nhiều instance cùng chạy. Cron cấu hình qua property
      * {@code admin.remember-me.cleanup-cron}, mặc định 3h sáng theo múi giờ phiên.
      */
-    @Scheduled(cron = "${admin.remember-me.cleanup-cron:0 0 3 * * *}", zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "${admin.remember-me.cleanup-cron:0 0 3 * * *}",
+            zone = AdminSessionService.SESSION_ZONE_ID)
     @Transactional
     public void cleanupExpiredTokens() {
         adminRememberMeRepository.deleteAllExpiredBefore(

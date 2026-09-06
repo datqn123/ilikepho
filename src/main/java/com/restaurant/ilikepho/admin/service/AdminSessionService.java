@@ -29,10 +29,16 @@ public class AdminSessionService {
     private final SessionIdGenerator sessionIdGenerator;
 
     /**
+     * Chuỗi múi giờ phiên dùng chung (hằng số compile-time để dùng được trong
+     * {@code @Scheduled(zone = ...)} của các job định kỳ, không lệch với {@link #SESSION_ZONE}).
+     */
+    public static final String SESSION_ZONE_ID = "Asia/Ho_Chi_Minh";
+
+    /**
      * Múi giờ cố định cho mọi thao tác thời gian của phiên và remember-me
      * (ghi timestamp và tính khoảng cách), không phụ thuộc múi giờ mặc định của máy chạy ứng dụng.
      */
-    public static final ZoneId SESSION_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
+    public static final ZoneId SESSION_ZONE = ZoneId.of(SESSION_ZONE_ID);
 
     public AdminSessionService(AdminRepository adminRepository,
                                AdminSessionRepository adminSessionRepository,

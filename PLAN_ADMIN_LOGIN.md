@@ -34,7 +34,18 @@
 ## Phần 8 — Bảo mật production
 - Bật HTTPS, bật `Secure` trên cookie.
 
-> **Trạng thái triển khai (Task 07, 2026-09-06):** cấu hình production gom vào profile `prod`
+> **Trạng thái triển khai (cập nhật Task 08, 2026-09-06): Phần 1–8 đã hoàn tất.** Chi tiết từng phần và bằng chứng nghiệm thu nằm trong `docs/tasks/01…08` (toàn bộ DoD đã tick kèm bằng chứng).
+> - Phần 1 (bảng admin + bcrypt) → Task 01 · Phần 2 (bảng session) → Task 02 · Phần 3 (session ID + cookie) → Task 03 · Phần 4 (login, khoá phiên cũ) → Task 04 · Phần 5 (middleware xác thực + sliding expiration) → Task 04 · Phần 6 (logout) → Task 04, bổ sung dọn remember token ở Task 06/07 · Phần 7 (chống CSRF: SameSite + synchronizer token phiên + login-CSRF double-submit) → Task 03/05/07 · Phần 8 (production) → Task 07, seed dev → Task 08.
+>
+> **Môi trường chạy test**: PostgreSQL local tại `localhost:5432`, DB `ilikepho` phải tồn tại, đặt biến môi trường `db_password` (mật khẩu Postgres local) trước khi chạy `./mvnw test` — thiếu biến này context test fail với `password authentication failed for user "postgres"`.
+>
+> **Seed tài khoản admin (chỉ dev/local)**: mặc định tắt. Bật khi cần kiểm chứng:
+> `ADMIN_SEED_ENABLED=true ADMIN_SEED_USERNAME=admin ADMIN_SEED_PASSWORD='…' ./mvnw spring-boot:run`
+> Seed idempotent (username đã có → bỏ qua, không ghi đè mật khẩu), mật khẩu lưu bcrypt, không bao giờ bật ở production.
+>
+> **Runbook**: mở 2 tab trang login cùng lúc thì tab submit sau đổi cookie login-CSRF, tab submit trước bị trả về trang login một lần rồi nhận token mới (đặc tính double-submit, chấp nhận được). Remember token hết hạn được job dọn lúc 3h sáng (`admin.remember-me.cleanup-cron`).
+>
+> **Triển khai production (Task 07, 2026-09-06):** cấu hình production gom vào profile `prod`
 > (`application-prod.properties`) — `admin.session.cookie.secure=true` (áp cho cả cookie phiên
 > lẫn cookie ghi nhớ), `server.forward-headers-strategy=framework` để đọc scheme từ reverse proxy,
 > `show-sql=false`, `thymeleaf.cache=true`. Cách chạy production: đứng sau reverse proxy HTTPS

@@ -44,6 +44,7 @@ public class AuthenticationController {
     public String loginPage(@NotNull Model model, @NotNull HttpServletResponse response) {
         model.addAttribute("userLogin", new UserLoginRequest());
         issueLoginCsrfToken(model, response);
+        forbidCache(response);
         return "admin/login";
     }
 
@@ -62,6 +63,7 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             // Render lại trang login trực tiếp nên phải cấp token login-CSRF mới cho lần submit tiếp theo
             issueLoginCsrfToken(model, response);
+            forbidCache(response);
             return "admin/login";
         }
         Optional<LoginResult> loginResult = adminAuthService.login(userLoginRequest.getUserName(),
@@ -117,6 +119,16 @@ public class AuthenticationController {
         response.addHeader(HttpHeaders.SET_COOKIE,
                 sessionCookieService.createLoginCsrfCookie(loginCsrfToken).toString());
         model.addAttribute("loginCsrfToken", loginCsrfToken);
+    }
+
+    /**
+     * Cấm trình duyệt/bộ đệm lưu cache trang đăng nhập (phòng thủ bổ sung:
+     * hidden field login-CSRF nằm trong HTML; cookie đi kèm vốn không bị cache).
+     *
+     * @param response response hiện tại
+     */
+    private void forbidCache(@NotNull HttpServletResponse response) {
+        response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
     }
 
     /**

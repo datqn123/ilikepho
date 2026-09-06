@@ -81,13 +81,13 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `mvn -q compile` thành công (không phá vỡ build hiện tại).
-- [ ] **DoD-02**: Entity `AdminSession` tồn tại trong `com.restaurant.ilikepho.admin.entity`, ánh xạ bảng `admin_session`, có đủ trường theo FR-01, KHÔNG khai quan hệ JPA.
-- [ ] **DoD-03**: Cột `session_hash` unique, chỉ lưu hash session ID (không lưu chuỗi gốc).
-- [ ] **DoD-04**: `adminId` là khoá ngoại dạng `Long` trỏ tới bảng `admin`.
-- [ ] **DoD-05**: Enum `SessionStatus` có `ACTIVE` / `LOCKED`, lưu dạng chuỗi trong DB.
-- [ ] **DoD-06**: `AdminSessionRepository.findBySessionHash(String)` tồn tại trong package admin.
-- [ ] **DoD-07**: Không có thành phần session nào nằm ngoài package admin (không lẫn vào vùng user/shared).
+- [x] **DoD-01**: `mvn -q compile` thành công (không phá vỡ build hiện tại). *(Tick lại trong Task 08: compile trong lần chạy `./mvnw test` tổng thể — 75/75 test xanh.)*
+- [x] **DoD-02**: Entity `AdminSession` tồn tại trong `com.restaurant.ilikepho.admin.entity`, ánh xạ bảng `admin_session`, có đủ trường theo FR-01, KHÔNG khai quan hệ JPA.
+- [x] **DoD-03**: Cột `session_hash` unique, chỉ lưu hash session ID (không lưu chuỗi gốc). *(AdminSessionServiceTest: bản ghi lưu hash SHA-256, không chứa chuỗi gốc.)*
+- [x] **DoD-04**: `adminId` là khoá ngoại dạng `Long` trỏ tới bảng `admin`.
+- [x] **DoD-05**: Enum `SessionStatus` có `ACTIVE` / `LOCKED`, lưu dạng chuỗi trong DB.
+- [x] **DoD-06**: `AdminSessionRepository.findBySessionHash(String)` tồn tại trong package admin. *(Dùng bởi luồng tra cứu phiên của interceptor.)*
+- [x] **DoD-07**: Không có thành phần session nào nằm ngoài package admin (không lẫn vào vùng user/shared).
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

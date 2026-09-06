@@ -85,13 +85,13 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `mvn -q compile` thành công.
-- [ ] **DoD-02**: `SessionIdGenerator.generate()` trả về chuỗi ngẫu nhiên an toàn, entropy ≥ 128-bit (32 bytes Base64 URL-safe), hai lần gọi cho kết quả khác nhau.
-- [ ] **DoD-03**: `SessionCookieService.createSessionCookie(id)` trả về cookie tên `ADMIN_SESSION`, path `/admin`, **HttpOnly = true**.
-- [ ] **DoD-04**: Cookie có **SameSite = Lax**.
-- [ ] **DoD-05**: Thuộc tính **Secure** của cookie lấy từ property `admin.session.cookie.secure` (test với `false` → Secure tắt; `true` → Secure bật).
-- [ ] **DoD-06**: `application.properties` có property `admin.session.cookie.secure`.
-- [ ] **DoD-07**: Các thành phần mới nằm trong package `admin.service`, không lẫn vào vùng user/shared.
+- [x] **DoD-01**: `mvn -q compile` thành công. *(Tick lại trong Task 08: compile trong lần chạy `./mvnw test` tổng thể — 75/75 test xanh.)*
+- [x] **DoD-02**: `SessionIdGenerator.generate()` trả về chuỗi ngẫu nhiên an toàn, entropy ≥ 128-bit (32 bytes Base64 URL-safe), hai lần gọi cho kết quả khác nhau. *(SecureRandom 32 byte → chuỗi 43 ký tự (~256-bit entropy); kiểm chứng thực tế Task 08: mỗi lần sinh (cookie phiên, token login-CSRF) đều cho giá trị khác nhau.)*
+- [x] **DoD-03**: `SessionCookieService.createSessionCookie(id)` trả về cookie tên `ADMIN_SESSION`, path `/admin`, **HttpOnly = true**. *(SessionCookieServiceTest; live Task 08: header `Set-Cookie: ADMIN_SESSION=…; Path=/admin; HttpOnly; SameSite=Lax`.)*
+- [x] **DoD-04**: Cookie có **SameSite = Lax**. *(Cùng bằng chứng với DoD-03.)*
+- [x] **DoD-05**: Thuộc tính **Secure** của cookie lấy từ property `admin.session.cookie.secure` (test với `false` → Secure tắt; `true` → Secure bật). *(SessionCookieServiceTest với cả 2 giá trị; `AdminProdProfileCookieTest` xác nhận bật Secure khi chạy profile prod.)*
+- [x] **DoD-06**: `application.properties` có property `admin.session.cookie.secure`.
+- [x] **DoD-07**: Các thành phần mới nằm trong package `admin.service`, không lẫn vào vùng user/shared.
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

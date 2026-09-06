@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,7 +67,8 @@ class AuthenticationControllerTest {
         mockMvc.perform(get("/admin/login"))
                 .andExpect(status().isOk())
                 .andExpect(cookie().value(SessionCookieService.LOGIN_CSRF_COOKIE_NAME, "login-csrf"))
-                .andExpect(model().attribute("loginCsrfToken", "login-csrf"));
+                .andExpect(model().attribute("loginCsrfToken", "login-csrf"))
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "no-store"));
     }
 
     @Test
@@ -174,6 +177,7 @@ class AuthenticationControllerTest {
                         .param("_csrf", "login-csrf")
                         .cookie(new Cookie(SessionCookieService.LOGIN_CSRF_COOKIE_NAME, "login-csrf")))
                 .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "no-store"))
                 .andExpect(model().attributeHasFieldErrors("userLogin", "userPassword"))
                 .andExpect(model().attribute("loginCsrfToken", "fresh-token"));
 

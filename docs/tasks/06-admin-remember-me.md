@@ -111,7 +111,7 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [x] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test pass. *(exit 0; `./mvnw test`: Tests run: 56, Failures: 0, Errors: 0 — BUILD SUCCESS; con số 54 là tại thời điểm hoàn thành task trước khi bổ sung 2 test CSRF sau code review)*
+- [x] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test pass. *(exit 0; `./mvnw test` với biến môi trường `db_password` đặt đúng: Tests run: 56, Failures: 0, Errors: 0 — BUILD SUCCESS; con số 54 là tại thời điểm hoàn thành task trước khi bổ sung 2 test CSRF sau code review)*
 - [x] **DoD-02**: `createRememberMeCookie` trả cookie tên `ADMIN_REMEMBER`, path `/admin`, HttpOnly, SameSite=Lax, MaxAge theo cấu hình (test pass). *(SessionCookieServiceTest.createRememberMeCookie_dungTenPathVaMaxAgeTheoCauHinh)*
 - [x] **DoD-03**: Login với `rememberMe=true` → tạo 1 dòng `admin_remember_me` (chỉ lưu hash), xoá token cũ của admin, trả remember token để set cookie (test `AdminRememberMeService`/`AdminAuthService`). *(createToken_xoaTokenCuVaLuuHashTraVeTokenGoc; login_coGhiNho_taoRememberTokenMoi)*
 - [x] **DoD-04**: Login với `rememberMe=false` → không tạo remember token; xoá token cũ nếu có (test pass). *(login_dungTaiKhoanKhongNho_traVeSessionIdVaXoaTokenCu)*
@@ -121,7 +121,7 @@
 - [x] **DoD-08**: Request **đã có phiên hợp lệ** → remember-me không làm gì thêm (test pass). *(RememberMeInterceptorTest.preHandle_daCoPhienHopLe_boQuaKhongTaoPhien — không tra remember, không tạo phiên, không set cookie)*
 - [x] **DoD-09**: Logout → khoá phiên + xoá remember token (cả khi phiên còn hợp lệ lẫn khi phiên đã chết — xoá theo hash cookie remember) + cookie `ADMIN_REMEMBER` hết hạn (test pass). *(AdminAuthServiceTest.logout_khoaPhienVaXoaRememberTheoAdminId + logout_phienChetVanXoaRememberTheoToken; AuthenticationControllerTest.handleLogout_xoaPhienVaRememberVaGuiHaiCookieHetHan)*
 - [x] **DoD-10**: Các thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared. *(entity/repository/service/interceptor/DTO mới đều trong `com.restaurant.ilikepho.admin.*`)*
-- [x] **DoD-11**: GET trang admin ngay sau khi remember-me nối phiên → form logout có hidden `_csrf` khớp phiên mới; POST logout với token đó thành công (test pass). *(AdminAuthInterceptorTest.phienDoRememberMeNoiLai — auth cấp attribute `csrfToken` từ phiên mới, topbar render hidden `_csrf` từ Task 05; CsrfTokenInterceptorTest.preHandle_postLogoutCoPhienVaTokenDung_choQua — token đúng thì POST logout qua; mức unit, chưa chạy UI thực tế)*
+- [x] **DoD-11**: GET trang admin ngay sau khi remember-me nối phiên → form logout có hidden `_csrf` khớp phiên mới; POST logout với token đó thành công (test pass). *(AdminAuthInterceptorTest.phienDoRememberMeNoiLai — auth cấp attribute `csrfToken` từ phiên mới, topbar render hidden `_csrf` từ Task 05; CsrfTokenInterceptorTest.preHandle_postLogoutCoPhienVaTokenDung_choQua — token đúng thì POST logout qua; kiểm chứng thêm bằng tay trong Task 08: curl chỉ còn cookie remember vẫn vào được `/admin/home` và nhận 2 cookie mới, sau đó logout bằng token của phiên nối lại thành công.)*
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

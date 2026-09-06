@@ -1,5 +1,6 @@
 package com.restaurant.ilikepho.admin.interceptor;
 
+import com.restaurant.ilikepho.admin.config.AdminWebMvcConfigurer;
 import com.restaurant.ilikepho.admin.entity.AdminRememberMe;
 import com.restaurant.ilikepho.admin.entity.AdminSession;
 import com.restaurant.ilikepho.admin.service.AdminRememberMeService;
@@ -62,12 +63,14 @@ class AdminInterceptorChainTest {
         CsrfTokenInterceptor csrfTokenInterceptor = new CsrfTokenInterceptor(adminSessionService);
         mockMvc = MockMvcBuilders.standaloneSetup(new DummyAdminController())
                 .addInterceptors(
-                        new MappedInterceptor(new String[]{"/admin/**"},
-                                new String[]{"/admin/login", "/admin/logout"}, rememberMeInterceptor),
-                        new MappedInterceptor(new String[]{"/admin/**"},
-                                new String[]{"/admin/login", "/admin/logout"}, adminAuthInterceptor),
-                        new MappedInterceptor(new String[]{"/admin/**"},
-                                new String[]{"/admin/login"}, csrfTokenInterceptor))
+                        new MappedInterceptor(new String[]{AdminWebMvcConfigurer.ADMIN_PATH_PATTERN},
+                                new String[]{AdminWebMvcConfigurer.LOGIN_PATH, AdminWebMvcConfigurer.LOGOUT_PATH},
+                                rememberMeInterceptor),
+                        new MappedInterceptor(new String[]{AdminWebMvcConfigurer.ADMIN_PATH_PATTERN},
+                                new String[]{AdminWebMvcConfigurer.LOGIN_PATH, AdminWebMvcConfigurer.LOGOUT_PATH},
+                                adminAuthInterceptor),
+                        new MappedInterceptor(new String[]{AdminWebMvcConfigurer.ADMIN_PATH_PATTERN},
+                                new String[]{AdminWebMvcConfigurer.LOGIN_PATH}, csrfTokenInterceptor))
                 .build();
     }
 

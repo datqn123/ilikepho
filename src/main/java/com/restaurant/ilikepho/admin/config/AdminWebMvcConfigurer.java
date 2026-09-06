@@ -15,6 +15,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class AdminWebMvcConfigurer implements WebMvcConfigurer {
 
+    /**
+     * Pattern khu vực admin áp dụng interceptor; dùng chung cho cấu hình và test chuỗi interceptor.
+     */
+    public static final String ADMIN_PATH_PATTERN = "/admin/**";
+
+    /**
+     * Đường dẫn trang đăng nhập, nằm ngoài remember-me, auth và CSRF phiên.
+     */
+    public static final String LOGIN_PATH = "/admin/login";
+
+    /**
+     * Đường dẫn đăng xuất, nằm ngoài remember-me và auth (CSRF vẫn kiểm tra khi còn phiên).
+     */
+    public static final String LOGOUT_PATH = "/admin/logout";
+
     private final RememberMeInterceptor rememberMeInterceptor;
     private final AdminAuthInterceptor adminAuthInterceptor;
     private final CsrfTokenInterceptor csrfTokenInterceptor;
@@ -30,13 +45,13 @@ public class AdminWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(rememberMeInterceptor)
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/login", "/admin/logout");
+                .addPathPatterns(ADMIN_PATH_PATTERN)
+                .excludePathPatterns(LOGIN_PATH, LOGOUT_PATH);
         registry.addInterceptor(adminAuthInterceptor)
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/login", "/admin/logout");
+                .addPathPatterns(ADMIN_PATH_PATTERN)
+                .excludePathPatterns(LOGIN_PATH, LOGOUT_PATH);
         registry.addInterceptor(csrfTokenInterceptor)
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/login");
+                .addPathPatterns(ADMIN_PATH_PATTERN)
+                .excludePathPatterns(LOGIN_PATH);
     }
 }

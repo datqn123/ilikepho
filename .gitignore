@@ -36,3 +36,4 @@ build/
 .dsh/
 .codegraph/
 .impeccable/
+.zcode/

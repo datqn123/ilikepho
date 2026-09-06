@@ -118,16 +118,16 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test (mới + cũ) pass.
-- [ ] **DoD-02**: Login sai tài khoản/mật khẩu → redirect `/admin/login?error`; không tạo phiên, không set cookie.
-- [ ] **DoD-03**: Login đúng → tạo 1 phiên ACTIVE (DB chỉ có hash SHA-256), set cookie `ADMIN_SESSION`, redirect `/admin/home` (test qua `AdminAuthService`).
-- [ ] **DoD-04**: `createSession` khoá mọi phiên ACTIVE cũ của admin đó trong cùng transaction (test verify bulk-update được gọi; lock dòng admin trước).
-- [ ] **DoD-05**: Interceptor: thiếu cookie / phiên không tồn tại / phiên LOCKED → redirect `/admin/login` và không cho qua (test pass).
-- [ ] **DoD-06**: Interceptor: phiên hợp lệ → cho qua, `last_activity_at` được cập nhật (test pass).
-- [ ] **DoD-07**: Phiên quá `admin.session.timeout-minutes` → bị khoá + redirect login (test `isExpired` pass).
-- [ ] **DoD-08**: POST `/admin/logout` → phiên bị khoá + cookie xoá (maxAge 0) → redirect `/admin/login`.
-- [ ] **DoD-09**: GET `/admin/home` render được trang dùng layout admin (sidebar + topbar + nút logout POST).
-- [ ] **DoD-10**: Toàn bộ thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared.
+- [x] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test (mới + cũ) pass. *(Tick lại trong Task 08: `./mvnw test` tổng thể 75/75 — BUILD SUCCESS.)*
+- [x] **DoD-02**: Login sai tài khoản/mật khẩu → redirect `/admin/login?error`; không tạo phiên, không set cookie. *(Unit test + kiểm chứng UI thực tế Task 08: sai mật khẩu hiện alert "Tài khoản hoặc mật khẩu không đúng".)*
+- [x] **DoD-03**: Login đúng → tạo 1 phiên ACTIVE (DB chỉ có hash SHA-256), set cookie `ADMIN_SESSION`, redirect `/admin/home` (test qua `AdminAuthService`). *(Unit test + live Task 08 với tài khoản seed.)*
+- [x] **DoD-04**: `createSession` khoá mọi phiên ACTIVE cũ của admin đó trong cùng transaction (test verify bulk-update được gọi; lock dòng admin trước).
+- [x] **DoD-05**: Interceptor: thiếu cookie / phiên không tồn tại / phiên LOCKED → redirect `/admin/login` và không cho qua (test pass). *(Live Task 08: sau logout, vào lại `/admin/home` bị trả về login.)*
+- [x] **DoD-06**: Interceptor: phiên hợp lệ → cho qua, `last_activity_at` được cập nhật (test pass).
+- [x] **DoD-07**: Phiên quá `admin.session.timeout-minutes` → bị khoá + redirect login (test `isExpired` pass).
+- [x] **DoD-08**: POST `/admin/logout` → phiên bị khoá + cookie xoá (maxAge 0) → redirect `/admin/login`. *(Unit test + live browser Task 08.)*
+- [x] **DoD-09**: GET `/admin/home` render được trang dùng layout admin (sidebar + topbar + nút logout POST). *(Kiểm chứng bằng ảnh chụp trình duyệt trong Task 08.)*
+- [x] **DoD-10**: Toàn bộ thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared.
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

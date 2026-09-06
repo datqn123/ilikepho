@@ -96,14 +96,14 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `mvn -q compile` thành công; `mvn test` toàn bộ **xanh** với môi trường Postgres local + `db_password` đúng.
-- [ ] **DoD-02**: Khi `admin.seed.enabled=false` (mặc định), khởi động **không** tạo tài khoản nào.
-- [ ] **DoD-03**: Khi bật seed với username chưa tồn tại → tạo admin (mật khẩu lưu bcrypt); chạy lại lần 2 → không tạo trùng/không đổi mật khẩu.
-- [ ] **DoD-04**: UI end-to-end kiểm chứng được: login đúng → `/admin/home`; login sai → `?error`; logout → về login và phiên/token remember bị xoá.
-- [ ] **DoD-05**: CSRF: POST logout thiếu/sai token → 403; đúng token → logout thành công (Task 05 kiểm chứng bằng tay).
-- [ ] **DoD-06**: Remember-me: đăng nhập có tick nhớ → xoá session cookie rồi truy cập lại → tự nối phiên (Task 06 kiểm chứng bằng tay).
-- [ ] **DoD-07**: Toàn bộ checkbox DoD trong `docs/tasks/01` → `08` được **tick đúng theo kết quả kiểm chứng thực tế**.
-- [ ] **DoD-08**: `PLAN_ADMIN_LOGIN.md` phản ánh trạng thái: Phần 1–8 đã triển khai + ghi chú môi trường/test/seed.
+- [x] **DoD-01**: `mvn -q compile` thành công; `mvn test` toàn bộ **xanh** với môi trường Postgres local + `db_password` đúng. *(Task 08: `./mvnw test` với biến môi trường `db_password` đặt đúng → Tests run: 76, Failures: 0, Errors: 0 — BUILD SUCCESS; 76 sau khi bổ sung 1 test username seed rỗng từ round code review.)*
+- [x] **DoD-02**: Khi `admin.seed.enabled=false` (mặc định), khởi động **không** tạo tài khoản nào. *(Chạy live không đặt biến seed: Started sạch, bảng `admin` giữ nguyên dữ liệu cũ.)*
+- [x] **DoD-03**: Khi bật seed với username chưa tồn tại → tạo admin (mật khẩu lưu bcrypt); chạy lại lần 2 → không tạo trùng/không đổi mật khẩu. *(Chạy live: lần 1 tạo đúng 1 dòng admin; restart lần 2 cùng biến môi trường → vẫn đúng 1 dòng, đăng nhập bằng mật khẩu đã seed vẫn thành công (hash bcrypt không bị ghi đè). Unit: `AdminDataSeederTest` 4 ca.)*
+- [x] **DoD-04**: UI end-to-end kiểm chứng được: login đúng → `/admin/home`; login sai → `?error`; logout → về login và phiên/token remember bị xoá. *(Trình duyệt thực tế Task 08: sai mật khẩu hiện alert "Tài khoản hoặc mật khẩu không đúng" tại `?error`; đúng tài khoản seed vào `/admin/home` "Đăng nhập thành công"; logout từ dropdown topbar về `/admin/login`, vào lại `/admin/home` bị trả về login (phiên và remember đã xoá).)*
+- [x] **DoD-05**: CSRF: POST logout thiếu/sai token → 403; đúng token → logout thành công (Task 05 kiểm chứng bằng tay). *(curl Task 08: thiếu token 403, sai token 403, đúng token 302; trình duyệt logout thành công.)*
+- [x] **DoD-06**: Remember-me: đăng nhập có tick nhớ → xoá session cookie rồi truy cập lại → tự nối phiên (Task 06 kiểm chứng bằng tay). *(curl Task 08: giữ duy nhất cookie `ADMIN_REMEMBER` → GET `/admin/home` 200 tự nối phiên, nhận 2 Set-Cookie mới (phiên mới + remember xoay mới).)*
+- [x] **DoD-07**: Toàn bộ checkbox DoD trong `docs/tasks/01` → `08` được **tick đúng theo kết quả kiểm chứng thực tế**. *(Đợt tick Task 08: docs 01→04 tick kèm bằng chứng unit + live; doc 05 tick DoD-08 sau khi chạy UI; docs 06/07 đã tick, bổ sung ghi chú kiểm chứng bằng tay; đồng thời xoá mật khẩu DB thật khỏi bằng chứng trong docs 06/07.)*
+- [x] **DoD-08**: `PLAN_ADMIN_LOGIN.md` phản ánh trạng thái: Phần 1–8 đã triển khai + ghi chú môi trường/test/seed. *(Bổ sung khối "Trạng thái triển khai" tổng hợp Phần 1–8, môi trường test, seed dev và runbook.)*
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

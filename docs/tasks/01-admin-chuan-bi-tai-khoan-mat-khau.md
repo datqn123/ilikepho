@@ -84,12 +84,12 @@
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `pom.xml` có dependency `spring-security-crypto` và dự án `mvn -q compile` thành công.
-- [ ] **DoD-02**: Entity `Admin` tồn tại trong `com.restaurant.ilikepho.admin.entity`, ánh xạ bảng `admin`, có các trường theo FR-01, KHÔNG khai quan hệ JPA.
-- [ ] **DoD-03**: `AdminRepository.findByUsername(String)` tồn tại trong package admin.
-- [ ] **DoD-04**: `PasswordService.hash(raw)` (trong `admin.service`) tạo chuỗi bcrypt khác nhau cho cùng mật khẩu (salt riêng từng user), không phải plain text.
-- [ ] **DoD-05**: `PasswordService.matches(raw, hash)` trả về `true` với mật khẩu đúng, `false` với mật khẩu sai.
-- [ ] **DoD-06**: Không còn entity `Admin` trong package `entity` dùng chung (không lẫn admin vào vùng user/shared).
+- [x] **DoD-01**: `pom.xml` có dependency `spring-security-crypto` và dự án `mvn -q compile` thành công. *(Tick lại trong Task 08: `./mvnw test` (gồm compile) BUILD SUCCESS — 75/75 test xanh.)*
+- [x] **DoD-02**: Entity `Admin` tồn tại trong `com.restaurant.ilikepho.admin.entity`, ánh xạ bảng `admin`, có các trường theo FR-01, KHÔNG khai quan hệ JPA. *(Chạy live Task 08: bảng `admin` tồn tại trong PostgreSQL, query id/username trả kết quả đúng.)*
+- [x] **DoD-03**: `AdminRepository.findByUsername(String)` tồn tại trong package admin. *(Được `AdminAuthService` và `AdminDataSeeder` sử dụng.)*
+- [x] **DoD-04**: `PasswordService.hash(raw)` (trong `admin.service`) tạo chuỗi bcrypt khác nhau cho cùng mật khẩu (salt riêng từng user), không phải plain text. *(PasswordServiceTest: hai lần hash cùng mật khẩu ra hai chuỗi bcrypt khác nhau và khác chuỗi gốc.)*
+- [x] **DoD-05**: `PasswordService.matches(raw, hash)` trả về `true` với mật khẩu đúng, `false` với mật khẩu sai. *(PasswordServiceTest; kiểm chứng lại live qua login đúng/sai ở Task 08.)*
+- [x] **DoD-06**: Không còn entity `Admin` trong package `entity` dùng chung (không lẫn admin vào vùng user/shared). *(Toàn bộ thành phần admin nằm trong `com.restaurant.ilikepho.admin.*`.)*
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

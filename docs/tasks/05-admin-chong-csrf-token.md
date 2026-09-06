@@ -106,7 +106,7 @@
 - [x] **DoD-05**: POST có phiên hợp lệ và `_csrf` **sai** → 403, không cho qua (test pass). *(test `preHandle_postCoPhienTokenSai_tra403VaChan`)*
 - [x] **DoD-06**: Request **GET** không bị chặn CSRF (test pass). *(test `preHandle_requestGet_khongKiemTraTokenVaChoQua`)*
 - [x] **DoD-07**: Request POST **không có phiên hợp lệ** (thiếu cookie) → bỏ qua kiểm tra CSRF (test pass). *(test không phiên không phải logout + test logout không cookie)*
-- [ ] **DoD-08**: Form logout trong topbar có hidden input `_csrf` lấy từ request attribute; logout khi có phiên dùng đúng token sẽ thành công (kiểm tra khi chạy UI). *(đã thêm hidden input đọc `${csrfToken}`; luồng logout có phiên + token đúng được phủ bởi unit test `preHandle_postLogoutCoPhienVaTokenDung_choQua` — còn chờ chạy UI thực tế để xác nhận cuối)*
+- [x] **DoD-08**: Form logout trong topbar có hidden input `_csrf` lấy từ request attribute; logout khi có phiên dùng đúng token sẽ thành công (kiểm tra khi chạy UI). *(Kiểm chứng UI thực tế trong Task 08: form logout trong dropdown topbar có hidden `_csrf`; POST logout với token đúng → 302 về `/admin/login` thành công; thiếu/sai token → 403 (curl).)*
 - [x] **DoD-09**: Các thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared.
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
