@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,9 @@ class AdminSessionServiceTest {
 
     @Mock
     private AdminSessionRepository adminSessionRepository;
+
+    @Spy
+    private SessionIdGenerator sessionIdGenerator = new SessionIdGenerator();
 
     @InjectMocks
     private AdminSessionService adminSessionService;
@@ -62,6 +66,22 @@ class AdminSessionServiceTest {
         assertThat(session.getSessionHash()).isEqualTo(adminSessionService.hashSessionId("raw-id"));
         assertThat(session.getCreatedAt()).isNotNull();
         assertThat(session.getLastActivityAt()).isNotNull();
+    }
+
+    @Test
+    void createSession_phienMoiCoCsrfTokenKhacRongVaKhacNhauGiuaCacLanTao() {
+        Admin admin = new Admin();
+        admin.setId(1L);
+        when(adminRepository.findWithLockingById(1L)).thenReturn(Optional.of(admin));
+        when(adminSessionRepository.save(any(AdminSession.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        AdminSession first = adminSessionService.createSession(1L, "raw-id");
+        AdminSession second = adminSessionService.createSession(1L, "raw-id-2");
+
+        assertThat(first.getCsrfToken()).isNotBlank();
+        assertThat(second.getCsrfToken()).isNotBlank();
+        assertThat(first.getCsrfToken()).isNotEqualTo(second.getCsrfToken());
     }
 
     @Test

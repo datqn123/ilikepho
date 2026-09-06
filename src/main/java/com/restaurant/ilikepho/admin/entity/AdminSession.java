@@ -31,6 +31,13 @@ public class AdminSession {
     @Column(name = "session_hash", nullable = false, unique = true, length = 100)
     private String sessionHash;
 
+    /**
+     * Token chống CSRF (Synchronizer Token) của phiên, sinh cùng lúc với phiên;
+     * token NULL (phiên cũ trước migration) coi như không khớp khi kiểm tra.
+     */
+    @Column(name = "csrf_token", length = 100)
+    private String csrfToken;
+
     @Column(name = "admin_id", nullable = false)
     private Long adminId;
 

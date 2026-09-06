@@ -22,6 +22,12 @@ import java.util.Optional;
 @Component
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
+    /**
+     * Request attribute chứa phiên admin hợp lệ sau khi xác thực đạt,
+     * dùng chung cho các thành phần phía sau (ví dụ CsrfTokenInterceptor, template).
+     */
+    public static final String SESSION_ATTRIBUTE = "adminSession";
+
     private final AdminSessionService adminSessionService;
     private final long timeoutMinutes;
 
@@ -55,7 +61,8 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
         }
 
         adminSessionService.updateLastActivity(session);
-        request.setAttribute("adminSession", session);
+        request.setAttribute(SESSION_ATTRIBUTE, session);
+        request.setAttribute("csrfToken", session.getCsrfToken());
         return true;
     }
 

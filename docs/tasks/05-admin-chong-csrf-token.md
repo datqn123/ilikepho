@@ -35,9 +35,9 @@
 
 | Mã | Mô tả yêu cầu | Ghi chú |
 |----|---------------|---------|
-| FR-01 | Entity `AdminSession` có thêm cột `csrf_token` (nullable) lưu token chống CSRF của phiên. | Cột chỉ tồn tại trên phiên, token sống chết cùng phiên. |
+| FR-01 | Entity `AdminSession` có thêm cột `csrf_token` (nullable) lưu token chống CSRF của phiên. | Cột chỉ tồn tại trên phiên, token sống chết cùng phiên. Phiên tạo trước khi thêm cột có token NULL → coi như không khớp khi kiểm tra (an toàn mặc định). |
 | FR-02 | `AdminSessionService.createSession` sinh CSRF token ngẫu nhiên an toàn (256-bit, `SessionIdGenerator`) và lưu vào phiên mới khi tạo. | Mỗi phiên ACTIVE mới có token mới; token không tái sử dụng giữa các phiên. |
-| FR-03 | `CsrfTokenInterceptor` chặn request thuộc method `POST/PUT/PATCH/DELETE` dưới `/admin/**`: nếu request có phiên ACTIVE hợp lệ → yêu cầu token khớp; thiếu token hoặc sai token → trả về 403 và không cho qua. | Trừ `/admin/login`. |
+| FR-03 | `CsrfTokenInterceptor` chặn request thuộc method `POST/PUT/PATCH/DELETE` dưới `/admin/**`: nếu request có phiên ACTIVE hợp lệ → yêu cầu token khớp; thiếu token hoặc sai token → trả về 403 và không cho qua. | Trừ `/admin/login`. So sánh token constant-time (`MessageDigest.isEqual`). |
 | FR-04 | `GET/HEAD/OPTIONS/TRACE` không bị kiểm tra CSRF (không thay đổi trạng thái). | |
 | FR-05 | Request **không có phiên hợp lệ** (thiếu cookie, phiên không tồn tại/hết hạn/khoá) → bỏ qua kiểm tra CSRF (không có phiên để bảo vệ). | Đảm bảo `/admin/logout` vẫn hoạt động khi phiên đã chết (controller chỉ xoá cookie). |
 | FR-06 | `/admin/logout` POST được bảo vệ CSRF khi có phiên hợp lệ; form logout trong `admin-topbar.html` có hidden input `_csrf`. | Token lấy từ request attribute. |
@@ -56,12 +56,14 @@
 - **Luồng dữ liệu / luồng xử lý**:
   - **Tạo phiên**: `AdminSessionService.createSession(...)` → sinh CSRF token (qua `SessionIdGenerator.generate()`) → set vào `session.csrfToken` → lưu DB.
   - **Request GET hợp lệ**: `AdminAuthInterceptor.preHandle` xác thực phiên → set `request` attribute `adminSession` + `csrfToken` → template đọc `csrfToken` để nhúng hidden input.
-  - **Request POST có phiên** (vd `/admin/logout`): auth cho qua (hoặc logout không chạy auth) → `CsrfTokenInterceptor.preHandle` đọc cookie → hash → tìm phiên ACTIVE → so `_csrf` (param hoặc header `X-CSRF-TOKEN`) với `session.csrfToken`; đúng → cho qua; thiếu/sai → `response.sendError(403)`, chặn.
+  - **Request POST có phiên** (vd `/admin/logout`): auth cho qua (hoặc logout không chạy auth) → `CsrfTokenInterceptor.preHandle` lấy phiên từ request attribute `adminSession` (auth interceptor đã đặt); riêng `/admin/logout` (auth bị exclude) tự đọc cookie → hash → tìm phiên ACTIVE → so `_csrf` (param hoặc header `X-CSRF-TOKEN`) với `session.csrfToken` bằng `MessageDigest.isEqual` (constant-time); đúng → cho qua; thiếu/sai (gồm cả token lưu trong DB là NULL) → `response.sendError(403)`, chặn.
 - **Các quyết định thiết kế**:
   - **Lưu token ngay trên phiên** (`admin_session.csrf_token`) thay vì bảng riêng hay token phi trạng thái (HMAC): đơn giản, token chắc chắn vô hiệu khi phiên bị khoá/xoá — khớp đúng tinh thần Phần 7. `ddl-auto=update` tự thêm cột nullable nên không phá dữ liệu hiện có.
   - **Dùng lại `SessionIdGenerator`** (SecureRandom, 256-bit Base64 URL-safe) để sinh token — không thêm cơ chế sinh mới.
-  - **Interceptor riêng** (`CsrfTokenInterceptor`) chạy **sau** `AdminAuthInterceptor`: chỉ kiểm tra khi đã có phiên hợp lệ; giữ cho class xác thực phiên không phình thêm trách nhiệm. Đăng ký cho `/admin/**` trừ `/admin/login`, **bao gồm** `/admin/logout` (logout khi có phiên phải được bảo vệ).
+  - **Interceptor riêng** (`CsrfTokenInterceptor`) chạy **sau** `AdminAuthInterceptor`: chỉ kiểm tra khi đã có phiên hợp lệ; giữ cho class xác thực phiên không phình thêm trách nhiệm. Đăng ký cho `/admin/**` trừ `/admin/login`, **bao gồm** `/admin/logout` (logout khi có phiên phải được bảo vệ). Tận dụng request attribute `adminSession` của auth interceptor thay vì tra DB lại; riêng `/admin/logout` (auth bị exclude) mới tự tra phiên từ cookie.
   - **So khớp linh hoạt param/header**: đọc `_csrf` từ request param trước, fallback header `X-CSRF-TOKEN` — thuận cho form và cho request sau này.
+  - **So sánh token constant-time** (`MessageDigest.isEqual`): tránh dò token qua đo thời gian phản hồi; chi phí không đáng kể.
+  - **Token NULL trong DB coi như không khớp**: an toàn theo mặc định với phiên cũ tồn tại trước migration.
   - **403 khi thiếu/sai token** (đã chốt với người dùng): rõ ràng, không tạo vòng lặp redirect; form nghiệp vụ tương lai nhúng token mới mỗi lần render.
 - **Điểm chạm hệ thống**: bảng `admin_session` thêm cột (JPA tự cập nhật); template `admin-topbar.html`; cấu hình interceptor.
 
@@ -69,11 +71,11 @@
 
 - **S-01**: Thêm field `csrfToken` (+ `@Column(name = "csrf_token")`) vào entity `AdminSession`.
 - **S-02**: Inject `SessionIdGenerator` vào `AdminSessionService`; trong `createSession` sinh và set `csrfToken` trước khi `save`.
-- **S-03**: Tạo `CsrfTokenInterceptor` trong `com.restaurant.ilikepho.admin.interceptor` (kiểm tra method, đọc cookie, tìm phiên ACTIVE, so token).
+- **S-03**: Tạo `CsrfTokenInterceptor` trong `com.restaurant.ilikepho.admin.interceptor` (kiểm tra method; lấy phiên từ attribute `adminSession`, tự tra từ cookie cho `/admin/logout`; so token constant-time bằng `MessageDigest.isEqual`, token NULL trong DB coi như không khớp).
 - **S-04**: Sửa `AdminAuthInterceptor` để set request attribute `csrfToken` (từ phiên) khi xác thực đạt.
 - **S-05**: Đăng ký `CsrfTokenInterceptor` trong `AdminWebMvcConfigurer` cho `/admin/**` trừ `/admin/login`, sau `AdminAuthInterceptor`.
 - **S-06**: Thêm hidden input `_csrf` vào form logout trong `fragment/admin-topbar.html`.
-- **S-07**: Cập nhật/viết unit test: `AdminSessionServiceTest` (phiên mới có token), mới `CsrfTokenInterceptorTest` (các kịch bản 403/cho qua); `mvn -q compile` + chạy test toàn bộ.
+- **S-07**: Cập nhật/viết unit test: `AdminSessionServiceTest` (phiên mới có token), mới `CsrfTokenInterceptorTest` (các kịch bản 403/cho qua, gồm cả phiên có token NULL); `mvn -q compile` + chạy test toàn bộ.
 
 ## 7. Các file / điểm chạm sẽ thay đổi
 
@@ -91,20 +93,21 @@
 ## 8. Rủi ro & giả định
 
 - **Rủi ro**: request POST hợp lệ bị chặn nhầm nếu token trên trang cũ không khớp phiên mới (vd phiên bị khoá rồi tạo lại qua remember-me — sẽ có ở Task 06). Giảm thiểu: interceptor chỉ kiểm tra khi phiên ACTIVE hiện tại; trang form phải render token của đúng phiên đang dùng; khi phiên đổi, người dùng vào lại trang để lấy token mới.
+- **Rủi ro**: phiên ACTIVE tồn tại từ trước khi thêm cột `csrf_token` (token NULL sau migration) → mọi POST sẽ 403 cho tới khi đăng nhập lại. Chấp nhận: chỉ xảy ra ở dev sau khi nâng cấp, phiên có hạn 30 phút sliding; thiết kế mặc định token NULL là không khớp (an toàn).
 - **Rủi ro**: thứ tự interceptor sai khiến logout bị chặn oan hoặc bỏ sót kiểm tra. Giảm thiểu: đăng ký auth → csrf; logout nằm trong pattern csrf nhưng ngoài pattern auth (thiết kế đã nêu), kiểm chứng bằng test.
 - **Giả định**: `ddl-auto=update` thêm được cột `csrf_token` nullable; toàn bộ POST hiện có trong `/admin/**` chỉ là `/admin/logout` (form đã biết) — chưa có POST nghiệp vụ khác bị ảnh hưởng.
 
 ## 9. Định nghĩa Hoàn thành (Definition of Done / Acceptance Criteria)
 
-- [ ] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test pass.
-- [ ] **DoD-02**: `AdminSessionService.createSession` tạo phiên mới có `csrfToken` khác rỗng, khác nhau giữa các lần tạo (test xác nhận).
-- [ ] **DoD-03**: POST tới đường dẫn admin có phiên hợp lệ nhưng **thiếu `_csrf`** → 403, không cho qua (test pass).
-- [ ] **DoD-04**: POST có phiên hợp lệ và `_csrf` **đúng** → cho qua (test pass).
-- [ ] **DoD-05**: POST có phiên hợp lệ và `_csrf` **sai** → 403, không cho qua (test pass).
-- [ ] **DoD-06**: Request **GET** không bị chặn CSRF (test pass).
-- [ ] **DoD-07**: Request POST **không có phiên hợp lệ** (thiếu cookie) → bỏ qua kiểm tra CSRF (test pass).
-- [ ] **DoD-08**: Form logout trong topbar có hidden input `_csrf` lấy từ request attribute; logout khi có phiên dùng đúng token sẽ thành công (kiểm tra khi chạy UI).
-- [ ] **DoD-09**: Các thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared.
+- [x] **DoD-01**: `mvn -q compile` thành công và toàn bộ unit test pass. *(đã chạy `./mvnw -q compile` exit 0; `./mvnw test`: 32/32 pass, BUILD SUCCESS — cần env `db_password` cho test context)*
+- [x] **DoD-02**: `AdminSessionService.createSession` tạo phiên mới có `csrfToken` khác rỗng, khác nhau giữa các lần tạo (test xác nhận). *(test `createSession_phienMoiCoCsrfTokenKhacRongVaKhacNhauGiuaCacLanTao`)*
+- [x] **DoD-03**: POST tới đường dẫn admin có phiên hợp lệ nhưng **thiếu `_csrf`** → 403, không cho qua (test pass). *(test `preHandle_postCoPhienThieuToken_tra403VaChan`)*
+- [x] **DoD-04**: POST có phiên hợp lệ và `_csrf` **đúng** → cho qua (test pass). *(test qua param và qua header `X-CSRF-TOKEN`)*
+- [x] **DoD-05**: POST có phiên hợp lệ và `_csrf` **sai** → 403, không cho qua (test pass). *(test `preHandle_postCoPhienTokenSai_tra403VaChan`)*
+- [x] **DoD-06**: Request **GET** không bị chặn CSRF (test pass). *(test `preHandle_requestGet_khongKiemTraTokenVaChoQua`)*
+- [x] **DoD-07**: Request POST **không có phiên hợp lệ** (thiếu cookie) → bỏ qua kiểm tra CSRF (test pass). *(test không phiên không phải logout + test logout không cookie)*
+- [ ] **DoD-08**: Form logout trong topbar có hidden input `_csrf` lấy từ request attribute; logout khi có phiên dùng đúng token sẽ thành công (kiểm tra khi chạy UI). *(đã thêm hidden input đọc `${csrfToken}`; luồng logout có phiên + token đúng được phủ bởi unit test `preHandle_postLogoutCoPhienVaTokenDung_choQua` — còn chờ chạy UI thực tế để xác nhận cuối)*
+- [x] **DoD-09**: Các thành phần mới nằm trong package `...admin...`, không lẫn vào vùng user/shared.
 
 ## 10. Các mục Ngoài phạm vi đã loại trừ (để sau)
 

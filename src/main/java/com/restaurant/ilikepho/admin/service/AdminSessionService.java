@@ -26,6 +26,7 @@ public class AdminSessionService {
 
     private final AdminRepository adminRepository;
     private final AdminSessionRepository adminSessionRepository;
+    private final SessionIdGenerator sessionIdGenerator;
 
     /**
      * Múi giờ cố định cho mọi thao tác thời gian của phiên (ghi timestamp và tính khoảng cách),
@@ -34,9 +35,11 @@ public class AdminSessionService {
     private static final ZoneId SESSION_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     public AdminSessionService(AdminRepository adminRepository,
-                               AdminSessionRepository adminSessionRepository) {
+                               AdminSessionRepository adminSessionRepository,
+                               SessionIdGenerator sessionIdGenerator) {
         this.adminRepository = adminRepository;
         this.adminSessionRepository = adminSessionRepository;
+        this.sessionIdGenerator = sessionIdGenerator;
     }
 
     /**
@@ -58,7 +61,8 @@ public class AdminSessionService {
     /**
      * Tạo phiên đăng nhập mới cho admin trong một transaction:
      * khoá dòng admin (pessimistic write) để tuần tự hoá đăng nhập đồng thời,
-     * khoá mọi phiên ACTIVE cũ (1 admin = 1 phiên hoạt động), rồi chèn phiên ACTIVE mới.
+     * khoá mọi phiên ACTIVE cũ (1 admin = 1 phiên hoạt động),
+     * sinh CSRF token riêng cho phiên rồi chèn phiên ACTIVE mới.
      *
      * @param adminId      id tài khoản admin
      * @param rawSessionId chuỗi session ID gốc (chỉ lưu hash vào DB)
@@ -74,6 +78,7 @@ public class AdminSessionService {
         AdminSession session = new AdminSession();
         session.setAdminId(adminId);
         session.setSessionHash(hashSessionId(rawSessionId));
+        session.setCsrfToken(sessionIdGenerator.generate());
         session.setStatus(SessionStatus.ACTIVE);
         LocalDateTime now = LocalDateTime.now(SESSION_ZONE);
         session.setCreatedAt(now);
