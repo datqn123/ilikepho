@@ -33,7 +33,6 @@ build/
 .vscode/
 
 ### AI tooling ###
-.opencode/
 .dsh/
 .codegraph/
 .impeccable/

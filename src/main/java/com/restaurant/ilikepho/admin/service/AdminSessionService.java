@@ -29,10 +29,10 @@ public class AdminSessionService {
     private final SessionIdGenerator sessionIdGenerator;
 
     /**
-     * Múi giờ cố định cho mọi thao tác thời gian của phiên (ghi timestamp và tính khoảng cách),
-     * không phụ thuộc múi giờ mặc định của máy chạy ứng dụng.
+     * Múi giờ cố định cho mọi thao tác thời gian của phiên và remember-me
+     * (ghi timestamp và tính khoảng cách), không phụ thuộc múi giờ mặc định của máy chạy ứng dụng.
      */
-    private static final ZoneId SESSION_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
+    public static final ZoneId SESSION_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
     public AdminSessionService(AdminRepository adminRepository,
                                AdminSessionRepository adminSessionRepository,

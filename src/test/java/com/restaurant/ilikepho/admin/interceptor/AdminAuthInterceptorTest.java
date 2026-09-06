@@ -93,4 +93,17 @@ class AdminAuthInterceptorTest {
         verify(adminSessionService).updateLastActivity(session);
         verify(response, never()).sendRedirect(anyString());
     }
+
+    @Test
+    void preHandle_phienDoRememberMeNoiLai_choQuaVaCapCsrfTokenKhongDocLaiCookie() throws Exception {
+        AdminSession session = new AdminSession();
+        session.setCsrfToken("csrf-token-moi");
+        when(request.getAttribute(AdminAuthInterceptor.SESSION_ATTRIBUTE)).thenReturn(session);
+
+        assertThat(interceptor.preHandle(request, response, new Object())).isTrue();
+
+        verify(request).setAttribute("csrfToken", "csrf-token-moi");
+        verify(adminSessionService, never()).hashSessionId(anyString());
+        verify(response, never()).sendRedirect(anyString());
+    }
 }

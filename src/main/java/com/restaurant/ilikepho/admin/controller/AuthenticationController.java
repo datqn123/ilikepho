@@ -1,5 +1,6 @@
 package com.restaurant.ilikepho.admin.controller;
 
+import com.restaurant.ilikepho.admin.dto.LoginResult;
 import com.restaurant.ilikepho.admin.dto.UserLoginRequest;
 import com.restaurant.ilikepho.admin.service.AdminAuthService;
 import com.restaurant.ilikepho.admin.service.SessionCookieService;
@@ -49,24 +50,28 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             return "admin/login";
         }
-        Optional<String> rawSessionId = adminAuthService.login(userLoginRequest.getUserName(),
-                userLoginRequest.getUserPassword());
-        if (rawSessionId.isEmpty()) {
+        Optional<LoginResult> loginResult = adminAuthService.login(userLoginRequest.getUserName(),
+                userLoginRequest.getUserPassword(), userLoginRequest.isRememberMe());
+        if (loginResult.isEmpty()) {
             return "redirect:/admin/login?error";
         }
         response.addHeader(HttpHeaders.SET_COOKIE,
-                sessionCookieService.createSessionCookie(rawSessionId.get()).toString());
+                sessionCookieService.createSessionCookie(loginResult.get().getRawSessionId()).toString());
+        if (loginResult.get().getRawRememberToken() != null) {
+            response.addHeader(HttpHeaders.SET_COOKIE,
+                    sessionCookieService.createRememberMeCookie(loginResult.get().getRawRememberToken()).toString());
+        }
         return "redirect:/admin/home";
     }
 
     @PostMapping("/logout")
     public String handleLogout(HttpServletRequest request, HttpServletResponse response) {
-        String rawSessionId = readSessionCookie(request);
-        if (rawSessionId != null) {
-            adminAuthService.logout(rawSessionId);
-        }
+        adminAuthService.logout(readCookie(request, SessionCookieService.SESSION_COOKIE_NAME),
+                readCookie(request, SessionCookieService.REMEMBER_ME_COOKIE_NAME));
         response.addHeader(HttpHeaders.SET_COOKIE,
                 sessionCookieService.createExpiredSessionCookie().toString());
+        response.addHeader(HttpHeaders.SET_COOKIE,
+                sessionCookieService.createExpiredRememberMeCookie().toString());
         return "redirect:/admin/login";
     }
 
@@ -82,12 +87,19 @@ public class AuthenticationController {
         }
     }
 
-    private @Nullable String readSessionCookie(@NotNull HttpServletRequest request) {
+    /**
+     * Đọc giá trị cookie theo tên khỏi request; trả về null khi request không có cookie đó.
+     *
+     * @param request    request hiện tại
+     * @param cookieName tên cookie cần đọc
+     * @return giá trị cookie hoặc null nếu không có
+     */
+    private @Nullable String readCookie(@NotNull HttpServletRequest request, String cookieName) {
         if (request.getCookies() == null) {
             return null;
         }
         for (Cookie cookie : request.getCookies()) {
-            if (SessionCookieService.SESSION_COOKIE_NAME.equals(cookie.getName())) {
+            if (cookieName.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

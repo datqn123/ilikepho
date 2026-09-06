@@ -40,6 +40,14 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IOException {
+        Object rememberedSession = request.getAttribute(SESSION_ATTRIBUTE);
+        if (rememberedSession instanceof AdminSession session) {
+            // Phiên do RememberMeInterceptor vừa nối lại: cookie mới chỉ nằm trên response
+            // nên không đọc lại cookie từ request được; cho qua ngay và vẫn cấp CSRF token cho trang.
+            request.setAttribute("csrfToken", session.getCsrfToken());
+            return true;
+        }
+
         String rawSessionId = readSessionCookie(request);
         if (rawSessionId == null) {
             redirectToLogin(response);
