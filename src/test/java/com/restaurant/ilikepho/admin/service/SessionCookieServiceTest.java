@@ -26,7 +26,7 @@ class SessionCookieServiceTest {
 
     @Test
     void createSessionCookie_dungTenPathHttpOnlySameSite() {
-        SessionCookieService service = new SessionCookieService(false, 30);
+        SessionCookieService service = new SessionCookieService(false, 30, 30);
 
         ResponseCookie cookie = service.createSessionCookie("session-id-abc");
 
@@ -39,16 +39,16 @@ class SessionCookieServiceTest {
 
     @Test
     void createSessionCookie_secureTheoCauHinhMoiTruong() {
-        SessionCookieService dev = new SessionCookieService(false, 30);
+        SessionCookieService dev = new SessionCookieService(false, 30, 30);
         assertThat(dev.createSessionCookie("x").isSecure()).isFalse();
 
-        SessionCookieService prod = new SessionCookieService(true, 30);
+        SessionCookieService prod = new SessionCookieService(true, 30, 30);
         assertThat(prod.createSessionCookie("x").isSecure()).isTrue();
     }
 
     @Test
     void createRememberMeCookie_dungTenPathVaMaxAgeTheoCauHinh() {
-        SessionCookieService service = new SessionCookieService(false, 30);
+        SessionCookieService service = new SessionCookieService(false, 30, 30);
 
         ResponseCookie cookie = service.createRememberMeCookie("remember-token");
 
@@ -63,11 +63,26 @@ class SessionCookieServiceTest {
 
     @Test
     void createExpiredRememberMeCookie_maxAge0DeXoaCookie() {
-        SessionCookieService service = new SessionCookieService(false, 30);
+        SessionCookieService service = new SessionCookieService(false, 30, 30);
 
         ResponseCookie cookie = service.createExpiredRememberMeCookie();
 
         assertThat(cookie.getName()).isEqualTo("ADMIN_REMEMBER");
         assertThat(cookie.getMaxAge()).isEqualTo(Duration.ZERO);
+    }
+
+    @Test
+    void createLoginCsrfCookie_dungTenPathVaMaxAgePhutTheoCauHinh() {
+        SessionCookieService service = new SessionCookieService(false, 30, 45);
+
+        ResponseCookie cookie = service.createLoginCsrfCookie("login-csrf-token");
+
+        assertThat(cookie.getName()).isEqualTo("ADMIN_LOGIN_CSRF");
+        assertThat(cookie.getValue()).isEqualTo("login-csrf-token");
+        assertThat(cookie.getPath()).isEqualTo("/admin");
+        assertThat(cookie.isHttpOnly()).isTrue();
+        assertThat(cookie.getSameSite()).isEqualTo("Lax");
+        assertThat(cookie.getMaxAge()).isEqualTo(Duration.ofMinutes(45));
+        assertThat(cookie.isSecure()).isFalse();
     }
 }

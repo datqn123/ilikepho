@@ -2,7 +2,9 @@ package com.restaurant.ilikepho.admin.controller;
 
 import com.restaurant.ilikepho.admin.dto.LoginResult;
 import com.restaurant.ilikepho.admin.dto.UserLoginRequest;
+import com.restaurant.ilikepho.admin.interceptor.CsrfTokenInterceptor;
 import com.restaurant.ilikepho.admin.service.AdminAuthService;
+import com.restaurant.ilikepho.admin.service.AdminLoginCsrfService;
 import com.restaurant.ilikepho.admin.service.SessionCookieService;
 import com.restaurant.ilikepho.common.MessageConstant;
 import jakarta.servlet.http.Cookie;
@@ -28,26 +30,38 @@ public class AuthenticationController {
 
     private final AdminAuthService adminAuthService;
     private final SessionCookieService sessionCookieService;
+    private final AdminLoginCsrfService adminLoginCsrfService;
 
     public AuthenticationController(AdminAuthService adminAuthService,
-                                    SessionCookieService sessionCookieService) {
+                                    SessionCookieService sessionCookieService,
+                                    AdminLoginCsrfService adminLoginCsrfService) {
         this.adminAuthService = adminAuthService;
         this.sessionCookieService = sessionCookieService;
+        this.adminLoginCsrfService = adminLoginCsrfService;
     }
 
     @GetMapping("/login")
-    public String loginPage(@NotNull Model model) {
-        UserLoginRequest userLoginRequest = new UserLoginRequest();
-        model.addAttribute("userLogin", userLoginRequest);
+    public String loginPage(@NotNull Model model, @NotNull HttpServletResponse response) {
+        model.addAttribute("userLogin", new UserLoginRequest());
+        issueLoginCsrfToken(model, response);
         return "admin/login";
     }
 
     @PostMapping("/login")
     public String handleLogin(@Valid @ModelAttribute("userLogin") UserLoginRequest userLoginRequest,
                               BindingResult bindingResult,
+                              @NotNull HttpServletRequest request,
+                              @NotNull Model model,
                               HttpServletResponse response) {
+        if (!adminLoginCsrfService.isValid(readCookie(request, SessionCookieService.LOGIN_CSRF_COOKIE_NAME),
+                request.getParameter(CsrfTokenInterceptor.CSRF_PARAM_NAME))) {
+            // Thiếu/sai token login-CSRF: từ chối xác thực, quay lại trang login (GET cấp token mới)
+            return "redirect:/admin/login";
+        }
         validatePassword(userLoginRequest, bindingResult);
         if (bindingResult.hasErrors()) {
+            // Render lại trang login trực tiếp nên phải cấp token login-CSRF mới cho lần submit tiếp theo
+            issueLoginCsrfToken(model, response);
             return "admin/login";
         }
         Optional<LoginResult> loginResult = adminAuthService.login(userLoginRequest.getUserName(),
@@ -60,6 +74,10 @@ public class AuthenticationController {
         if (loginResult.get().getRawRememberToken() != null) {
             response.addHeader(HttpHeaders.SET_COOKIE,
                     sessionCookieService.createRememberMeCookie(loginResult.get().getRawRememberToken()).toString());
+        } else {
+            // Login không ghi nhớ: xoá cookie remember cũ còn sót trên trình duyệt (token đã bị xoá ở DB)
+            response.addHeader(HttpHeaders.SET_COOKIE,
+                    sessionCookieService.createExpiredRememberMeCookie().toString());
         }
         return "redirect:/admin/home";
     }
@@ -85,6 +103,20 @@ public class AuthenticationController {
                 bindingResult.rejectValue("userPassword", "error.userPassword", MessageConstant.USERPASSWORD_SIZE);
             }
         }
+    }
+
+    /**
+     * Sinh token login-CSRF mới: đặt cookie ngắn hạn {@code ADMIN_LOGIN_CSRF} trên response
+     * và đưa token vào model cho hidden field của form đăng nhập.
+     *
+     * @param model    model của view đăng nhập
+     * @param response response hiện tại để gắn cookie
+     */
+    private void issueLoginCsrfToken(@NotNull Model model, @NotNull HttpServletResponse response) {
+        String loginCsrfToken = adminLoginCsrfService.generateToken();
+        response.addHeader(HttpHeaders.SET_COOKIE,
+                sessionCookieService.createLoginCsrfCookie(loginCsrfToken).toString());
+        model.addAttribute("loginCsrfToken", loginCsrfToken);
     }
 
     /**

@@ -6,6 +6,7 @@
 - **Hệ**: admin
 - **Nhiệm vụ**: Seed tài khoản admin (chỉ dev) để kiểm chứng end-to-end; xanh lại test môi trường; kiểm tra tổng thể và tick DoD + hoàn tất tài liệu
 - **Ngày tạo**: 2026-09-05
+- **Ngày cập nhật**: 2026-09-06 — tiếp nhận các điểm Minor từ code review Task 07 (mục 11) để xử lý cùng đợt kiểm tra tổng thể.
 
 ---
 
@@ -26,6 +27,7 @@
 - Property `admin.seed.enabled` (mặc định `false`), `admin.seed.username`, `admin.seed.password` (mặc định rỗng) trong `application.properties`.
 - Ghi chú môi trường chạy test (PostgreSQL local, DB `ilikepho`, biến môi trường `db_password`) — cập nhật vào tài liệu.
 - Chạy kiểm tra tổng thể: `mvn -q compile`, `mvn test` toàn bộ, kiểm chứng UI end-to-end.
+- Xử lý các điểm Minor từ code review Task 07 (chi tiết tại mục 11): hằng số pattern interceptor dùng chung, hằng số múi giờ dùng chung, `Cache-Control: no-store` cho trang đăng nhập, integration test nguyên tử login (tùy chọn).
 - Hoàn tất tài liệu: tick DoD cho `docs/tasks/01` → `08` và cập nhật trạng thái `PLAN_ADMIN_LOGIN.md`.
 
 ### Out of scope (việc KHÔNG thuộc task — đã loại trừ)
@@ -54,7 +56,7 @@
 - **Kiến trúc / mô-đun liên quan**: Spring Boot (CommandLineRunner/ApplicationRunner + `@ConditionalOnProperty`), JPA (`AdminRepository`), `PasswordService`. Package admin: `admin.config` hoặc `admin.bootstrap`.
 - **Luồng xử lý**: Khởi động → nếu `admin.seed.enabled=true` → đọc username/password từ property → `AdminRepository.findByUsername` → rỗng thì tạo `Admin` (hash mật khẩu, set `createdAt`/`updatedAt`) và `save`.
 - **Các quyết định thiết kế**:
-  - **Bật qua property `admin.seed.enabled`, mặc định `false`**: an toàn tuyệt đối với production — không cần profile phức tạp, người chạy local chủ động bật (vd `-Dadmadmin.seed...`/env). Không dùng `@Profile("dev")` để tránh phụ thuộc profile đặt sẵn.
+  - **Bật qua property `admin.seed.enabled`, mặc định `false`**: an toàn tuyệt đối với production — không cần profile phức tạp, người chạy local chủ động bật (vd biến môi trường `ADMIN_SEED_ENABLED=true` hoặc `-Dadmin.seed.enabled=true`). Không dùng `@Profile("dev")` để tránh phụ thuộc profile đặt sẵn.
   - **Kiểm tra tồn tại trước khi tạo** (idempotent): chạy lại nhiều lần không tạo trùng, không reset mật khẩu đã đổi.
   - **Không có mật khẩu mặc định có giá trị trong file**: tránh commit credential; người dùng phải cung cấp khi bật seed.
   - **Đặt trong `admin.config`** (hoặc `admin.bootstrap`): gọn, cùng nhóm cấu hình khởi động admin.
@@ -108,3 +110,13 @@
 - Quản lý tài khoản admin trên UI (đổi mật khẩu, thêm/sửa/xoá admin).
 - Tự động hoá CI/CD hoặc migration DB.
 - Seed/tính năng cho hệ user; native image.
+
+## 11. Mục chuyển tiếp từ code review Task 07 (2026-09-06)
+
+Code review Task 07 kết luận **Ready to merge** (0 Critical, 0 Important, 5 Minor); các Minor còn lại dưới đây chuyển vào task này để xử lý cùng đợt kiểm tra tổng thể:
+
+- **Tách hằng số pattern interceptor dùng chung**: các pattern `/admin/**`, `/admin/login`, `/admin/logout` đang được gõ lại trong `AdminInterceptorChainTest` thay vì tham chiếu từ `AdminWebMvcConfigurer` — tách hằng số public ở configurer để test tự ghim đúng cấu hình thật (chống drift cấu hình bảo mật khi sau này sửa config).
+- **Hằng số chuỗi múi giờ dùng chung**: chuỗi `"Asia/Ho_Chi_Minh"` lặp tại `@Scheduled(zone = ...)` của `AdminRememberMeService` (annotation cần hằng số compile-time, không dùng được `ZoneId`) — thêm `public static final String SESSION_ZONE_ID` cạnh `AdminSessionService.SESSION_ZONE` để hai chỗ không lệch nhau.
+- **`Cache-Control: no-store` cho response trang đăng nhập**: hidden field login-CSRF nằm trong HTML trả về; `no-store` là phòng thủ bổ sung (double-submit vẫn an toàn vì cookie đi kèm không bị cache).
+- **(Tùy chọn) Integration test nguyên tử login**: `@SpringBootTest` chứng minh rollback thật khi tạo remember token lỗi và tuần tự hoá 2 login đồng thời của cùng admin (hiện được chứng minh bằng review code + unit test lan truyền exception — xem Task 07 mục 5/DoD-07).
+- **Backlog production-readiness (ghi nhận, có thể tách task riêng)**: prod đang kế thừa `spring.jpa.hibernate.ddl-auto=update`; chưa có rate-limit/lockout cho luồng login; bổ sung ghi chú runbook về trường hợp 2 tab đăng nhập mở cùng lúc (tab submit sau đổi cookie login-CSRF → tab submit trước bị trả về trang login một lần — đặc tính của double-submit, chấp nhận được).

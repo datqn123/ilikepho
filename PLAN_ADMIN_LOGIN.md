@@ -33,3 +33,11 @@
 
 ## Phần 8 — Bảo mật production
 - Bật HTTPS, bật `Secure` trên cookie.
+
+> **Trạng thái triển khai (Task 07, 2026-09-06):** cấu hình production gom vào profile `prod`
+> (`application-prod.properties`) — `admin.session.cookie.secure=true` (áp cho cả cookie phiên
+> lẫn cookie ghi nhớ), `server.forward-headers-strategy=framework` để đọc scheme từ reverse proxy,
+> `show-sql=false`, `thymeleaf.cache=true`. Cách chạy production: đứng sau reverse proxy HTTPS
+> (nginx phải set đúng header `X-Forwarded-Proto/Host/Port`), đặt biến môi trường
+> `SPRING_PROFILES_ACTIVE=prod`, DB vẫn đọc mật khẩu từ biến môi trường `db_password`
+> và **không bật seed tài khoản admin** (tài khoản tạo thủ công — Task 08 chỉ seed cho dev).

@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
@@ -79,6 +80,20 @@ class AdminAuthServiceTest {
         assertThat(result).isPresent();
         assertThat(result.get().getRawRememberToken()).isEqualTo("raw-remember");
         verify(adminRememberMeService, never()).deleteAllByAdminId(any());
+    }
+
+    @Test
+    void login_taoTokenLoi_nemLoiDeTransactionRollbackToanBo() {
+        when(adminRepository.findByUsername("admin")).thenReturn(Optional.of(adminCoSan()));
+        when(passwordService.matches("matkhau", "hash")).thenReturn(true);
+        when(sessionIdGenerator.generate()).thenReturn("raw-session-id");
+        when(adminRememberMeService.createToken(1L)).thenThrow(new IllegalStateException("DB loi"));
+
+        // Lỗi tạo token không được nuốt: login không trả kết quả, transaction proxy (@Transactional)
+        // sẽ rollback cả phiên vừa tạo — không còn phiên mồ côi
+        assertThatThrownBy(() -> adminAuthService.login("admin", "matkhau", true))
+                .isInstanceOf(IllegalStateException.class);
+        verify(adminSessionService).createSession(1L, "raw-session-id");
     }
 
     @Test

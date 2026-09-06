@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -30,4 +31,15 @@ public interface AdminRememberMeRepository extends JpaRepository<AdminRememberMe
     @Modifying
     @Query("delete from AdminRememberMe r where r.adminId = :adminId")
     int deleteByAdminId(@Param("adminId") Long adminId);
+
+    /**
+     * Xoá mọi remember token đã quá hạn dùng theo mốc thời gian cho trước
+     * (job định kỳ giới hạn tăng trưởng bảng; xoá theo điều kiện nên idempotent).
+     *
+     * @param now mốc thời điểm hiện tại theo múi giờ phiên
+     * @return số dòng đã xoá
+     */
+    @Modifying
+    @Query("delete from AdminRememberMe r where r.expiresAt < :now")
+    int deleteAllExpiredBefore(@Param("now") LocalDateTime now);
 }

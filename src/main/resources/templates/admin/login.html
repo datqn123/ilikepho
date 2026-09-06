@@ -79,6 +79,8 @@
             </div>
 
             <form class="login-form" data-login-form th:action="@{/admin/login}" th:object="${userLogin}" method="post">
+                <!-- Token chống login-CSRF: double-submit với cookie ADMIN_LOGIN_CSRF, server so constant-time khi POST -->
+                <input type="hidden" name="_csrf" th:value="${loginCsrfToken}">
                 <div class="field">
                     <label for="username">Tài khoản</label>
                     <div class="input-wrap">

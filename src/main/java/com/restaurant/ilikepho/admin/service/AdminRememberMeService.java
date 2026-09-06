@@ -3,6 +3,7 @@ package com.restaurant.ilikepho.admin.service;
 import com.restaurant.ilikepho.admin.entity.AdminRememberMe;
 import com.restaurant.ilikepho.admin.repository.AdminRememberMeRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,6 +103,19 @@ public class AdminRememberMeService {
     @Transactional
     public void deleteAllByAdminId(Long adminId) {
         adminRememberMeRepository.deleteByAdminId(adminId);
+    }
+
+    /**
+     * Dọn dẹp định kỳ các remember token đã hết hạn khỏi DB để giới hạn tăng trưởng bảng
+     * (token hết hạn đã bị bỏ qua khi tra cứu từ trước); xoá theo điều kiện nên job
+     * idempotent, an toàn khi nhiều instance cùng chạy. Cron cấu hình qua property
+     * {@code admin.remember-me.cleanup-cron}, mặc định 3h sáng theo múi giờ phiên.
+     */
+    @Scheduled(cron = "${admin.remember-me.cleanup-cron:0 0 3 * * *}", zone = "Asia/Ho_Chi_Minh")
+    @Transactional
+    public void cleanupExpiredTokens() {
+        adminRememberMeRepository.deleteAllExpiredBefore(
+                LocalDateTime.now(AdminSessionService.SESSION_ZONE));
     }
 
     /**

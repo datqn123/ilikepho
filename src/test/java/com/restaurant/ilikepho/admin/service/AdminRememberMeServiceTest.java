@@ -162,4 +162,16 @@ class AdminRememberMeServiceTest {
 
         verify(adminRememberMeRepository).deleteByAdminId(7L);
     }
+
+    @Test
+    void cleanupExpiredTokens_xoaTheoMocHienTaiTheoMuiGioPhien() {
+        ArgumentCaptor<LocalDateTime> captor = ArgumentCaptor.forClass(LocalDateTime.class);
+
+        service.cleanupExpiredTokens();
+
+        verify(adminRememberMeRepository).deleteAllExpiredBefore(captor.capture());
+        assertThat(captor.getValue())
+                .isCloseTo(LocalDateTime.now(AdminSessionService.SESSION_ZONE),
+                        within(10, ChronoUnit.SECONDS));
+    }
 }
